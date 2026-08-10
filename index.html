@@ -1,0 +1,6136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#FCFCFA">
+<title>Vocabulary Talk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=BIZ+UDPGothic:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Vocabulary Talk — design tokens
+   Palette lifted directly from PICKS' own light "sheet" tokens
+   (paper / ink / gold-teal / rule) so this reads as a sibling app,
+   just built on the light side of PICKS' palette instead of the dark
+   shell. No new colors invented.
+   ===================================================================== */
+:root{
+  --paper:#FCFCFA; --paper-2:#F3F4EF; --paper-3:#EAEBE4;
+  --ink:#14181F; --ink-soft:#4A515C; --ink-dim:#8A93A0;
+  --rule:#E1E4DC;
+  --teal:#14B8A6; --teal-2:#2DD4BF; --teal-soft:#E1F7F3; --teal-ink:#0B5C52;
+  --blue:#4A5FA0; --blue-soft:#EAF0FF; --blue-ink:#1B3E99;
+  --amber:#FBBF24; --amber-soft:#FEF3D8; --amber-ink:#8A6008;
+  --red:#FF4D3D; --red-soft:#FFE9E6;
+  --ok:#1FA971; --ok-soft:#EAF7F0;
+  --r:14px; --r-lg:22px;
+  --fs:16px; --lh:1.6;
+  --shadow-sm:0 1px 2px rgba(20,24,31,.06), 0 1px 1px rgba(20,24,31,.04);
+  --shadow-md:0 6px 20px rgba(20,24,31,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+html,body{overflow-x:hidden;max-width:100%;height:100%}
+img,svg{max-width:100%;display:block}
+body{
+  font-family:"BIZ UDPGothic","Andika",system-ui,sans-serif;
+  color:var(--ink); line-height:var(--lh); min-height:100vh;
+  background:var(--paper);
+}
+body.reduce-motion *{animation:none!important;transition:none!important}
+.en{font-family:"Andika","BIZ UDPGothic",sans-serif}
+.mono{font-family:"Space Mono",ui-monospace,monospace}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+button:disabled{cursor:default;opacity:.4}
+input,select,textarea{font-family:inherit;font-size:1rem;color:var(--ink)}
+:focus-visible{outline:2.5px solid var(--teal-2);outline-offset:3px;border-radius:6px}
+::selection{background:rgba(20,184,166,.22)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.eyebrow{
+  font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-dim);
+}
+
+/* =====================================================================
+   App shell
+   ===================================================================== */
+#app{min-height:100vh;display:flex;flex-direction:column}
+
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1.4rem;border-bottom:1px solid var(--rule);
+  background:var(--paper);
+}
+.brand{display:flex;align-items:baseline;gap:.55rem;cursor:pointer}
+.brand:hover .wordmark{color:var(--teal-ink)}
+.brand .wordmark{
+  font-family:"Space Grotesk","Andika",sans-serif;font-weight:700;
+  font-size:1.3rem;letter-spacing:.06em;color:var(--ink);
+}
+.brand .wordmark .dot{color:var(--teal)}
+.brand .sub{font-family:"Space Mono",monospace;font-size:.6rem;letter-spacing:.16em;color:var(--ink-dim);text-transform:uppercase}
+.topbar nav{display:flex;gap:.4rem}
+.topbar nav button{
+  font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.5rem .85rem;border-radius:999px;color:var(--ink-soft);
+}
+.topbar nav button:hover{background:var(--paper-2)}
+.topbar nav button.on{background:var(--teal-soft);color:var(--teal-ink)}
+
+main{flex:1;min-height:0;display:flex;flex-direction:column}
+
+/* =====================================================================
+   Buttons
+   ===================================================================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  font-family:"BIZ UDPGothic",sans-serif;font-weight:700;font-size:.95rem;
+  padding:.72rem 1.3rem;border-radius:12px;transition:transform .12s ease, background .15s ease;
+  border:1.5px solid transparent;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-ink)}
+.btn-outline{background:var(--paper);border-color:var(--rule);color:var(--ink)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal-ink)}
+.btn-ghost{color:var(--ink-soft)}
+.btn-ghost:hover{color:var(--ink)}
+.btn-sm{padding:.4rem .75rem;font-size:.78rem;border-radius:9px}
+.btn-lg{padding:1rem 1.9rem;font-size:1.08rem;border-radius:14px}
+
+/* icon-only round buttons — used throughout Presentation mode, no text labels */
+.icon-btn{
+  width:50px;height:50px;border-radius:50%;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--rule);background:#fff;color:var(--ink);
+  transition:transform .12s ease, background .15s ease, border-color .12s ease;
+}
+.icon-btn svg{width:22px;height:22px}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn:disabled{opacity:.3}
+.icon-btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.icon-btn.primary:hover{background:var(--teal-ink);border-color:var(--teal-ink)}
+.icon-btn.ghost{border-color:transparent;background:transparent;color:var(--ink-dim)}
+.icon-btn.ghost:hover{background:var(--paper-2);color:var(--ink)}
+.icon-btn.outline:hover{border-color:var(--teal);color:var(--teal-ink)}
+.icon-btn.on{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-ink)}
+.icon-btn-sm{width:38px;height:38px}
+.icon-btn-sm svg{width:18px;height:18px}
+
+/* segmented control (never a native <select> for choices) */
+.segmented{display:inline-flex;background:var(--paper-2);border-radius:11px;padding:.22rem;gap:.15rem}
+.segmented button{
+  font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:.5rem .9rem;border-radius:8px;color:var(--ink-soft);
+}
+.segmented button.on{background:#fff;color:var(--teal-ink);box-shadow:var(--shadow-sm)}
+
+/* =====================================================================
+   Cards (compact, square-ish selection tiles — never long horizontal bars)
+   ===================================================================== */
+.tile{
+  background:#fff;border:1.5px solid var(--rule);border-radius:var(--r);
+  padding:.9rem .9rem .8rem;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;gap:.35rem;
+  transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.tile:hover{border-color:var(--teal-2);box-shadow:var(--shadow-sm)}
+.tile.picked{border-color:var(--teal);background:var(--teal-soft)}
+.tile .tile-word{font-family:"Andika",sans-serif;font-weight:700;font-size:1.08rem;color:var(--ink)}
+.tile .tile-ja{font-size:.82rem;color:var(--ink-soft)}
+.tile .tile-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.15rem}
+.tag{
+  font-family:"Space Mono",monospace;font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;
+  padding:.14rem .5rem;border-radius:999px;background:var(--paper-2);color:var(--ink-dim);
+}
+.tile.picked .tag{background:#fff}
+.tile-check{
+  align-self:flex-end;width:1.3rem;height:1.3rem;border-radius:50%;
+  border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;
+  position:absolute;top:.6rem;right:.6rem;background:#fff;
+}
+.tile{position:relative}
+.tile.picked .tile-check{background:var(--teal);border-color:var(--teal)}
+.tile.picked .tile-check::after{content:"";width:.55rem;height:.32rem;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.65rem}
+
+/* =====================================================================
+   Presentation mode — this is the screen students actually watch.
+   No admin chrome. No secondary text. One thing at a time, huge.
+   ===================================================================== */
+.stage{
+  flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.2rem 2rem;text-align:center;position:relative;background:var(--paper);
+  overflow:hidden;
+}
+.stage-progress{
+  position:absolute;top:1.1rem;left:1.3rem;
+  font-family:"Space Mono",monospace;font-size:.85rem;color:var(--ink-dim);
+}
+.stage-exit{position:absolute;top:.8rem;right:1rem}
+
+.scene-frame{
+  width:auto;height:min(52vh,560px);aspect-ratio:16/9;max-width:82vw;
+  border-radius:var(--r-lg);
+  background:var(--paper-2);border:1.5px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:var(--shadow-md);
+}
+.scene-frame img{width:100%;height:100%;object-fit:cover}
+.scene-placeholder{display:flex;flex-direction:column;align-items:center;gap:.6rem;color:var(--ink-dim)}
+.scene-placeholder svg{width:64px;height:64px;opacity:.5}
+.scene-placeholder span{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+
+.reveal-word{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--ink);
+  font-size:clamp(3rem,7vw,6rem);line-height:1.2;
+}
+.reveal-word .ja{
+  display:block;font-family:"BIZ UDPGothic",sans-serif;font-weight:700;
+  font-size:clamp(1.1rem,2.4vw,1.7rem);color:var(--ink-soft);margin-top:1.1rem;
+}
+.reveal-model{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--ink);
+  font-size:clamp(2.6rem,6.5vw,5.2rem);line-height:1.25;
+  max-width:88vw;text-wrap:balance;
+}
+.reveal-chunk{
+  font-family:"Space Mono",monospace;font-size:clamp(.95rem,1.8vw,1.3rem);
+  letter-spacing:.04em;color:var(--teal-ink);text-transform:none;margin-bottom:.8rem;
+}
+
+.which-row{
+  display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));grid-template-rows:repeat(2,auto);
+  gap:1.3rem 1.6rem;justify-items:stretch;align-items:center;max-width:min(70vw,760px);
+}
+.which-word{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--ink);
+  font-size:clamp(2.4rem,5.6vw,4.6rem);text-align:center;
+  padding:.6rem 1.2rem;border-radius:20px;
+}
+
+.ideas-wrap{display:flex;flex-direction:column;align-items:center;gap:1.2rem;max-width:80vw}
+.which-image-frame{
+  width:min(30vw,280px);aspect-ratio:4/3;border-radius:var(--r-lg);
+  background:var(--paper-2);border:1.5px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.which-image-frame img{width:100%;height:100%;object-fit:cover}
+.which-image-frame .scene-placeholder svg{width:38px;height:38px}
+.idea-answer{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--teal-ink);
+  background:var(--teal-soft);font-size:clamp(2.2rem,5vw,4rem);
+  padding:.4rem 1.5rem;border-radius:20px;
+}
+.idea-list{display:flex;flex-direction:column;align-items:center;gap:.8rem}
+.idea-line{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--ink);
+  font-size:clamp(1.3rem,2.6vw,2rem);
+}
+
+.stage-controls{
+  display:flex;align-items:center;gap:.5rem;padding:1rem 1.2rem;
+  border-top:1px solid var(--rule);background:var(--paper);flex-wrap:wrap;justify-content:center;
+}
+.ctrl-slot{width:64px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stage-controls .btn{font-size:.9rem;padding:.6rem 1.1rem}
+.stage-controls .divider{width:1px;height:1.6rem;background:var(--rule);margin:0 .3rem}
+
+/* teacher-only hint — small popover anchored above the hint button.
+   Deliberately NOT full-width/fixed: it stays local to the control bar
+   so it can never sit over the exit button or shift its hit target. */
+.stage-controls{position:relative}
+.helper-anchor{position:relative;display:inline-flex}
+.helper-pop{
+  position:absolute;bottom:calc(100% + .6rem);right:0;
+  background:#fff;border:1.5px solid var(--teal);border-radius:12px;
+  padding:.75rem .95rem;box-shadow:var(--shadow-md);
+  min-width:220px;max-width:340px;text-align:left;
+  display:none;z-index:60;
+}
+.helper-pop.open{display:block}
+.helper-pop .hp-close{
+  position:absolute;top:.35rem;right:.5rem;width:1.4rem;height:1.4rem;
+  border-radius:50%;color:var(--ink-dim);font-size:.9rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.helper-pop .hp-close:hover{background:var(--paper-2);color:var(--ink)}
+.helper-pop ul{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin-top:.1rem}
+.helper-pop li{font-family:"Andika",sans-serif;font-size:.92rem;color:var(--ink-soft)}
+
+/* fullscreen mode: hide topbar entirely */
+body.fs .topbar{display:none}
+
+/* =====================================================================
+   Home
+   ===================================================================== */
+.home{max-width:760px;margin:0 auto;padding:3.4rem 1.5rem;display:flex;flex-direction:column;gap:1.2rem;flex:1;justify-content:center}
+.home-title{font-family:"Andika",sans-serif;font-weight:700;font-size:1.9rem;color:var(--ink);text-align:center}
+.home-modes{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.mode-card{
+  background:#fff;border:1.5px solid var(--rule);border-radius:var(--r-lg);
+  padding:2.1rem 1.3rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.7rem;
+  transition:border-color .12s ease, transform .12s ease, box-shadow .12s ease;
+}
+.mode-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.mode-card .m-icon{width:44px;height:44px;color:var(--teal)}
+.mode-card .m-title{font-family:"Andika",sans-serif;font-weight:700;font-size:1.15rem;color:var(--ink)}
+.mode-card .m-sub{font-size:.8rem;color:var(--ink-soft)}
+.home-foot{display:flex;justify-content:center;gap:1rem;margin-top:.6rem}
+
+/* =====================================================================
+   Selector screen
+   ===================================================================== */
+.selector{max-width:1080px;margin:0 auto;padding:1.3rem 1.5rem 6.5rem;width:100%}
+.selector-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem;margin-bottom:1rem}
+.selector-title{font-family:"Andika",sans-serif;font-weight:700;font-size:1.3rem}
+.filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.selector-bar{
+  position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--rule);
+  padding:.85rem 1.4rem;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 -6px 18px rgba(20,24,31,.06);
+}
+.count-badge{font-family:"Space Mono",monospace;font-size:.85rem;color:var(--ink-soft)}
+.count-badge b{color:var(--teal-ink)}
+
+/* =====================================================================
+   Teacher edit area (tucked away, never on home)
+   ===================================================================== */
+.editor-link{
+  font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-dim);
+}
+
+/* toast */
+.toast{
+  position:fixed;bottom:1.3rem;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:.6rem 1.1rem;border-radius:10px;font-size:.85rem;
+  opacity:0;transition:opacity .2s ease, transform .2s ease;pointer-events:none;z-index:80;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* =====================================================================
+   Responsive
+   ===================================================================== */
+@media (max-width:720px){
+  .home-modes{grid-template-columns:1fr}
+  .stage-controls{gap:.35rem}
+  .stage-controls .btn{font-size:.8rem;padding:.5rem .8rem}
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="wordmark en">VOCAB<span class="dot">·</span>TALK</span>
+      <span class="sub">Scene &amp; Talk</span>
+    </div>
+  </header>
+  <main id="app-root"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- Data lives inside this file on purpose: GitHub's drag-and-drop upload
+     flattens subfolders, so a multi-file version breaks on upload. Everything
+     needed to run is in this single index.html. Only scene images (assets/scenes/)
+     stay as separate files, added one at a time as they're created. -->
+<script type="application/json" id="vt-data-scene-targets">
+[
+  {
+    "id": "S001",
+    "word": "think",
+    "japanese": "思う・考える",
+    "chunk": "I think ...",
+    "model_sentence": "I think it's a good idea.",
+    "scene_idea": "2人が別々の案を見ながら考えている。",
+    "teacher_prompt": "What do you think?",
+    "function": "OPINION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 47,
+    "ngsl_spoken_rank": 28,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S002",
+    "word": "know",
+    "japanese": "知っている",
+    "chunk": "I know ...",
+    "model_sentence": "I know that place.",
+    "scene_idea": "友達が示した写真を見て『知っている』反応をしている。",
+    "teacher_prompt": "Does she know it?",
+    "function": "OPINION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 41,
+    "ngsl_spoken_rank": 17,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S003",
+    "word": "understand",
+    "japanese": "理解する",
+    "chunk": "I understand.",
+    "model_sentence": "Now I understand.",
+    "scene_idea": "説明を聞いた後、表情が『わかった』に変わる。",
+    "teacher_prompt": "What changed?",
+    "function": "UNDERSTAND",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 243,
+    "ngsl_spoken_rank": 230,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S004",
+    "word": "mean",
+    "japanese": "意味する",
+    "chunk": "What does ... mean?",
+    "model_sentence": "What does this sign mean?",
+    "scene_idea": "見慣れない標識を2人が見ている。",
+    "teacher_prompt": "What are they wondering?",
+    "function": "EXPLAIN",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, verb",
+    "ngsl_rank": 95,
+    "ngsl_spoken_rank": 52,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S005",
+    "word": "agree",
+    "japanese": "賛成する",
+    "chunk": "agree with ...",
+    "model_sentence": "I agree with you.",
+    "scene_idea": "2人が同じ案を指してうなずいている。",
+    "teacher_prompt": "Do they have the same idea?",
+    "function": "OPINION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 420,
+    "ngsl_spoken_rank": 350,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S006",
+    "word": "believe",
+    "japanese": "信じる・～と思う",
+    "chunk": "I believe ...",
+    "model_sentence": "I believe we can do it.",
+    "scene_idea": "難しい課題の前で仲間を励ましている。",
+    "teacher_prompt": "What might she say?",
+    "function": "OPINION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 225,
+    "ngsl_spoken_rank": 252,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S007",
+    "word": "guess",
+    "japanese": "推測する",
+    "chunk": "I guess ...",
+    "model_sentence": "I guess he's busy.",
+    "scene_idea": "返事が来ないスマホ画面を見て推測している。",
+    "teacher_prompt": "What does she think?",
+    "function": "OPINION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 901,
+    "ngsl_spoken_rank": 217,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S008",
+    "word": "decide",
+    "japanese": "決める",
+    "chunk": "decide to ...",
+    "model_sentence": "I decided to join the club.",
+    "scene_idea": "複数の部活動ポスターから一つを選び終えた。",
+    "teacher_prompt": "What did he decide?",
+    "function": "CHOICE",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 359,
+    "ngsl_spoken_rank": 383,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S009",
+    "word": "choose",
+    "japanese": "選ぶ",
+    "chunk": "choose ...",
+    "model_sentence": "She chose the blue one.",
+    "scene_idea": "色違いのTシャツから1枚を手に取る。",
+    "teacher_prompt": "Which one did she choose?",
+    "function": "CHOICE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 447,
+    "ngsl_spoken_rank": 660,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S010",
+    "word": "compare",
+    "japanese": "比べる",
+    "chunk": "compare A and B",
+    "model_sentence": "They're comparing two phones.",
+    "scene_idea": "2台のスマホの大きさや機能を見比べている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "COMPARE",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 614,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S011",
+    "word": "explain",
+    "japanese": "説明する",
+    "chunk": "explain ...",
+    "model_sentence": "He's explaining the rule.",
+    "scene_idea": "ゲームのルールを図を使って友達に説明している。",
+    "teacher_prompt": "What is he doing?",
+    "function": "EXPLAIN",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 489,
+    "ngsl_spoken_rank": 652,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S012",
+    "word": "imagine",
+    "japanese": "想像する",
+    "chunk": "imagine ...",
+    "model_sentence": "Imagine your life in ten years.",
+    "scene_idea": "未来の自分を思い浮かべている。",
+    "teacher_prompt": "What is she thinking about?",
+    "function": "THINKING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 924,
+    "ngsl_spoken_rank": 623,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S013",
+    "word": "notice",
+    "japanese": "気づく",
+    "chunk": "notice ...",
+    "model_sentence": "She noticed a small mistake.",
+    "scene_idea": "ポスターの小さな間違いを指さしている。",
+    "teacher_prompt": "What happened?",
+    "function": "THINKING",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 664,
+    "ngsl_spoken_rank": 530,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S014",
+    "word": "remember",
+    "japanese": "覚えている・思い出す",
+    "chunk": "remember ...",
+    "model_sentence": "I remember this place.",
+    "scene_idea": "昔の写真を見て思い出している。",
+    "teacher_prompt": "Why is he smiling?",
+    "function": "MEMORY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 351,
+    "ngsl_spoken_rank": 169,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S015",
+    "word": "forget",
+    "japanese": "忘れる",
+    "chunk": "forget ...",
+    "model_sentence": "I forgot my homework.",
+    "scene_idea": "学校でかばんを開けて困った顔をしている。",
+    "teacher_prompt": "What's wrong?",
+    "function": "MEMORY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 651,
+    "ngsl_spoken_rank": 431,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S016",
+    "word": "want",
+    "japanese": "～したい・欲しい",
+    "chunk": "want to ...",
+    "model_sentence": "I want to try it.",
+    "scene_idea": "友達がしている活動を見て自分もやりたそうにしている。",
+    "teacher_prompt": "What does she want to do?",
+    "function": "WANT_NEED",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 76,
+    "ngsl_spoken_rank": 59,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S017",
+    "word": "need",
+    "japanese": "必要とする",
+    "chunk": "need to ...",
+    "model_sentence": "I need to finish this today.",
+    "scene_idea": "締切表示と未完成の課題を見ている。",
+    "teacher_prompt": "What does he need to do?",
+    "function": "WANT_NEED",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "modal auxiliary, verb",
+    "ngsl_rank": 90,
+    "ngsl_spoken_rank": 98,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S018",
+    "word": "hope",
+    "japanese": "望む",
+    "chunk": "I hope ...",
+    "model_sentence": "I hope it will be sunny.",
+    "scene_idea": "遠足前日に天気予報を見ている。",
+    "teacher_prompt": "What is she hoping for?",
+    "function": "WANT_NEED",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 250,
+    "ngsl_spoken_rank": 320,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S019",
+    "word": "wish",
+    "japanese": "願う",
+    "chunk": "I wish ...",
+    "model_sentence": "I wish I had more time.",
+    "scene_idea": "時計と山積みの宿題を見ている。",
+    "teacher_prompt": "What might he wish?",
+    "function": "WANT_NEED",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 524,
+    "ngsl_spoken_rank": 579,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S020",
+    "word": "plan",
+    "japanese": "計画する",
+    "chunk": "plan to ...",
+    "model_sentence": "We plan to visit Kyoto.",
+    "scene_idea": "旅行マップに行き先を書き込んでいる。",
+    "teacher_prompt": "What are they doing?",
+    "function": "PLAN",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 232,
+    "ngsl_spoken_rank": 277,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S021",
+    "word": "try",
+    "japanese": "やってみる",
+    "chunk": "try to ...",
+    "model_sentence": "I'll try to do it.",
+    "scene_idea": "難しそうな技に初めて挑戦している。",
+    "teacher_prompt": "What's happening?",
+    "function": "ACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 125,
+    "ngsl_spoken_rank": 109,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S022",
+    "word": "prefer",
+    "japanese": "～の方を好む",
+    "chunk": "prefer A to B",
+    "model_sentence": "I prefer tea to coffee.",
+    "scene_idea": "2つの飲み物から一方を選んでいる。",
+    "teacher_prompt": "Which does she prefer?",
+    "function": "CHOICE",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 949,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S023",
+    "word": "prepare",
+    "japanese": "準備する",
+    "chunk": "prepare for ...",
+    "model_sentence": "We're preparing for the school festival.",
+    "scene_idea": "飾りや道具を並べて学校祭の準備をしている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "PLAN",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 604,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S024",
+    "word": "promise",
+    "japanese": "約束する",
+    "chunk": "promise to ...",
+    "model_sentence": "I promise to help you.",
+    "scene_idea": "2人が小指を絡めて約束している。",
+    "teacher_prompt": "What are they doing?",
+    "function": "SOCIAL",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "noun, verb",
+    "ngsl_rank": 829,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S025",
+    "word": "ask",
+    "japanese": "尋ねる・頼む",
+    "chunk": "ask ...",
+    "model_sentence": "Can I ask you a question?",
+    "scene_idea": "生徒が手を挙げて先生に話しかけようとしている。",
+    "teacher_prompt": "What is she going to do?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 134,
+    "ngsl_spoken_rank": 140,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S026",
+    "word": "answer",
+    "japanese": "答える",
+    "chunk": "answer ...",
+    "model_sentence": "Can you answer this question?",
+    "scene_idea": "教師の問いに生徒が答えている。",
+    "teacher_prompt": "What is he doing?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 355,
+    "ngsl_spoken_rank": 302,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S027",
+    "word": "tell",
+    "japanese": "伝える・教える",
+    "chunk": "tell someone ...",
+    "model_sentence": "Tell me about your trip.",
+    "scene_idea": "旅行写真を見せながら友達に話している。",
+    "teacher_prompt": "What is she doing?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 103,
+    "ngsl_spoken_rank": 101,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S028",
+    "word": "say",
+    "japanese": "言う",
+    "chunk": "say ...",
+    "model_sentence": "What did he say?",
+    "scene_idea": "騒がしい場所で相手の言葉が聞き取れなかった。",
+    "teacher_prompt": "What might she ask?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 30,
+    "ngsl_spoken_rank": 32,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S029",
+    "word": "speak",
+    "japanese": "話す",
+    "chunk": "speak to ...",
+    "model_sentence": "Can I speak to you?",
+    "scene_idea": "生徒が先生に個人的に話しかけている。",
+    "teacher_prompt": "What's happening?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 284,
+    "ngsl_spoken_rank": 268,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S030",
+    "word": "talk",
+    "japanese": "話す",
+    "chunk": "talk about ...",
+    "model_sentence": "We talked about our plans.",
+    "scene_idea": "2人が予定表を見ながら話している。",
+    "teacher_prompt": "What are they talking about?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 137,
+    "ngsl_spoken_rank": 99,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S031",
+    "word": "call",
+    "japanese": "電話する・呼ぶ",
+    "chunk": "call ...",
+    "model_sentence": "I'll call you tonight.",
+    "scene_idea": "スマホの通話ボタンを押そうとしている。",
+    "teacher_prompt": "What is he going to do?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 105,
+    "ngsl_spoken_rank": 118,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S032",
+    "word": "help",
+    "japanese": "助ける",
+    "chunk": "help someone",
+    "model_sentence": "She's helping her friend.",
+    "scene_idea": "重い荷物を持つ友達を手伝っている。",
+    "teacher_prompt": "What's happening?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 133,
+    "ngsl_spoken_rank": 209,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S033",
+    "word": "show",
+    "japanese": "見せる",
+    "chunk": "show someone ...",
+    "model_sentence": "Show me your picture.",
+    "scene_idea": "スマホ写真を友達に見せている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 110,
+    "ngsl_spoken_rank": 225,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S034",
+    "word": "give",
+    "japanese": "与える・渡す",
+    "chunk": "give someone ...",
+    "model_sentence": "He gave her a present.",
+    "scene_idea": "包んだプレゼントを手渡している。",
+    "teacher_prompt": "What's happening?",
+    "function": "INTERACTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 77,
+    "ngsl_spoken_rank": 93,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S035",
+    "word": "lend",
+    "japanese": "貸す",
+    "chunk": "lend someone ...",
+    "model_sentence": "Can you lend me your pen?",
+    "scene_idea": "ペンを持っている生徒に友達が頼んでいる。",
+    "teacher_prompt": "What might he be asking?",
+    "function": "REQUEST",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "verb",
+    "ngsl_rank": 2305,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S036",
+    "word": "borrow",
+    "japanese": "借りる",
+    "chunk": "borrow ...",
+    "model_sentence": "Can I borrow your pencil?",
+    "scene_idea": "鉛筆を忘れた生徒が友達の鉛筆を指して頼んでいる。",
+    "teacher_prompt": "What's happening?",
+    "function": "REQUEST",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 1880,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S037",
+    "word": "invite",
+    "japanese": "招待する",
+    "chunk": "invite someone to ...",
+    "model_sentence": "I invited her to my party.",
+    "scene_idea": "招待状を友達に渡している。",
+    "teacher_prompt": "What's happening?",
+    "function": "SOCIAL",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 1028,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S038",
+    "word": "join",
+    "japanese": "参加する",
+    "chunk": "join ...",
+    "model_sentence": "Can I join you?",
+    "scene_idea": "数人で遊んでいるところへ別の生徒が近づいている。",
+    "teacher_prompt": "What might he ask?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 469,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S039",
+    "word": "meet",
+    "japanese": "会う",
+    "chunk": "meet ...",
+    "model_sentence": "I met my friend at the station.",
+    "scene_idea": "駅で友達同士が会っている。",
+    "teacher_prompt": "What's happening?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 135,
+    "ngsl_spoken_rank": 159,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S040",
+    "word": "thank",
+    "japanese": "感謝する",
+    "chunk": "thank someone for ...",
+    "model_sentence": "Thank you for your help.",
+    "scene_idea": "手伝ってもらったあと感謝を伝えている。",
+    "teacher_prompt": "What might she say?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 244,
+    "ngsl_spoken_rank": 158,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S041",
+    "word": "welcome",
+    "japanese": "歓迎する",
+    "chunk": "welcome ...",
+    "model_sentence": "Welcome to our school.",
+    "scene_idea": "新しい生徒を玄関で迎えている。",
+    "teacher_prompt": "What might they say?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, interjection, verb",
+    "ngsl_rank": 989,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S042",
+    "word": "introduce",
+    "japanese": "紹介する",
+    "chunk": "introduce A to B",
+    "model_sentence": "Let me introduce my friend.",
+    "scene_idea": "友達同士を初めて引き合わせている。",
+    "teacher_prompt": "What's happening?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 772,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S043",
+    "word": "recommend",
+    "japanese": "すすめる",
+    "chunk": "recommend ...",
+    "model_sentence": "I recommend this book.",
+    "scene_idea": "本を手にして友達にすすめている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "OPINION",
+    "cefr_j": "B1",
+    "tier": "ACTIVE",
+    "pos": "verb",
+    "ngsl_rank": 1007,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S044",
+    "word": "suggest",
+    "japanese": "提案する",
+    "chunk": "suggest ...",
+    "model_sentence": "I suggest taking the bus.",
+    "scene_idea": "地図を見ながら移動方法を提案している。",
+    "teacher_prompt": "What might he be saying?",
+    "function": "OPINION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 329,
+    "ngsl_spoken_rank": 481,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S045",
+    "word": "support",
+    "japanese": "支える・応援する",
+    "chunk": "support ...",
+    "model_sentence": "We support our team.",
+    "scene_idea": "試合でチームを応援している。",
+    "teacher_prompt": "What are they doing?",
+    "function": "SOCIAL",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 272,
+    "ngsl_spoken_rank": 377,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S046",
+    "word": "share",
+    "japanese": "共有する・分け合う",
+    "chunk": "share ... with ...",
+    "model_sentence": "Let's share this cake.",
+    "scene_idea": "1つのケーキを複数人で分けている。",
+    "teacher_prompt": "What's happening?",
+    "function": "SOCIAL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 353,
+    "ngsl_spoken_rank": 598,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S047",
+    "word": "go",
+    "japanese": "行く",
+    "chunk": "go to ...",
+    "model_sentence": "I go to school by bus.",
+    "scene_idea": "バスに乗って学校へ向かっている。",
+    "teacher_prompt": "Where is he going?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 31,
+    "ngsl_spoken_rank": 19,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S048",
+    "word": "come",
+    "japanese": "来る",
+    "chunk": "come to ...",
+    "model_sentence": "Can you come to my house?",
+    "scene_idea": "友達を家に招こうとしている。",
+    "teacher_prompt": "What might she ask?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 65,
+    "ngsl_spoken_rank": 60,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S049",
+    "word": "leave",
+    "japanese": "出発する・去る",
+    "chunk": "leave ...",
+    "model_sentence": "We leave home at seven.",
+    "scene_idea": "時計を見ながら家を出ようとしている。",
+    "teacher_prompt": "What's happening?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 126,
+    "ngsl_spoken_rank": 155,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S050",
+    "word": "arrive",
+    "japanese": "到着する",
+    "chunk": "arrive at ...",
+    "model_sentence": "We arrived at the station.",
+    "scene_idea": "駅に着いて時計を確認している。",
+    "teacher_prompt": "What just happened?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 588,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S051",
+    "word": "wait",
+    "japanese": "待つ",
+    "chunk": "wait for ...",
+    "model_sentence": "We're waiting for the bus.",
+    "scene_idea": "バス停で時刻表を見ながら待っている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 403,
+    "ngsl_spoken_rank": 285,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S052",
+    "word": "start",
+    "japanese": "始める",
+    "chunk": "start ...",
+    "model_sentence": "Let's start the game.",
+    "scene_idea": "全員が準備を終え、ゲームを始めようとしている。",
+    "teacher_prompt": "What happens next?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 136,
+    "ngsl_spoken_rank": 121,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S053",
+    "word": "stop",
+    "japanese": "止める・やめる",
+    "chunk": "stop ...",
+    "model_sentence": "Please stop talking.",
+    "scene_idea": "先生が話している横で生徒が会話している。",
+    "teacher_prompt": "What might the teacher say?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 347,
+    "ngsl_spoken_rank": 292,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S054",
+    "word": "continue",
+    "japanese": "続ける",
+    "chunk": "continue ...",
+    "model_sentence": "Please continue your story.",
+    "scene_idea": "話を途中で止めた友達に続きを促している。",
+    "teacher_prompt": "What might she say?",
+    "function": "DAILY",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 308,
+    "ngsl_spoken_rank": 465,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S055",
+    "word": "finish",
+    "japanese": "終える",
+    "chunk": "finish ...",
+    "model_sentence": "I finished my homework.",
+    "scene_idea": "宿題の最後にチェックを付けている。",
+    "teacher_prompt": "What just happened?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 609,
+    "ngsl_spoken_rank": 384,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S056",
+    "word": "use",
+    "japanese": "使う",
+    "chunk": "use ...",
+    "model_sentence": "Can I use this computer?",
+    "scene_idea": "空いているPCを指して先生に尋ねている。",
+    "teacher_prompt": "What might he ask?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 68,
+    "ngsl_spoken_rank": 82,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S057",
+    "word": "make",
+    "japanese": "作る",
+    "chunk": "make ...",
+    "model_sentence": "We made a poster.",
+    "scene_idea": "大きな紙に絵や文字を書いてポスターを作っている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 48,
+    "ngsl_spoken_rank": 69,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S058",
+    "word": "take",
+    "japanese": "取る・持っていく",
+    "chunk": "take ...",
+    "model_sentence": "Take an umbrella.",
+    "scene_idea": "雨の外出前に傘を手渡している。",
+    "teacher_prompt": "Why is she giving him that?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 59,
+    "ngsl_spoken_rank": 72,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S059",
+    "word": "bring",
+    "japanese": "持ってくる",
+    "chunk": "bring ...",
+    "model_sentence": "Please bring your notebook.",
+    "scene_idea": "明日の持ち物リストを見ている。",
+    "teacher_prompt": "What does she need tomorrow?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 196,
+    "ngsl_spoken_rank": 221,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S060",
+    "word": "carry",
+    "japanese": "運ぶ",
+    "chunk": "carry ...",
+    "model_sentence": "He's carrying a heavy box.",
+    "scene_idea": "大きな箱を両手で運んでいる。",
+    "teacher_prompt": "What is he doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 446,
+    "ngsl_spoken_rank": 474,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S061",
+    "word": "put",
+    "japanese": "置く",
+    "chunk": "put ... on ...",
+    "model_sentence": "Put the book on the desk.",
+    "scene_idea": "本を机の上に置いている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 139,
+    "ngsl_spoken_rank": 91,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S062",
+    "word": "keep",
+    "japanese": "保つ・持ち続ける",
+    "chunk": "keep ...",
+    "model_sentence": "Keep the door closed.",
+    "scene_idea": "冷房中の部屋で開いたドアを閉めるよう示している。",
+    "teacher_prompt": "Why?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 177,
+    "ngsl_spoken_rank": 150,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S063",
+    "word": "find",
+    "japanese": "見つける",
+    "chunk": "find ...",
+    "model_sentence": "I found my key.",
+    "scene_idea": "探していた鍵を見つけて喜んでいる。",
+    "teacher_prompt": "What happened?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 81,
+    "ngsl_spoken_rank": 124,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S064",
+    "word": "look",
+    "japanese": "見る",
+    "chunk": "look at ...",
+    "model_sentence": "Look at this picture.",
+    "scene_idea": "写真を指して友達の注意を向けている。",
+    "teacher_prompt": "What might she say?",
+    "function": "PERCEPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 75,
+    "ngsl_spoken_rank": 70,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S065",
+    "word": "watch",
+    "japanese": "見る",
+    "chunk": "watch ...",
+    "model_sentence": "We watched a movie.",
+    "scene_idea": "テレビ画面を集中して見ている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "PERCEPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 326,
+    "ngsl_spoken_rank": 275,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S066",
+    "word": "see",
+    "japanese": "見る・会う",
+    "chunk": "see ...",
+    "model_sentence": "I can see a rainbow.",
+    "scene_idea": "窓の外の虹を指さしている。",
+    "teacher_prompt": "What can they see?",
+    "function": "PERCEPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 50,
+    "ngsl_spoken_rank": 54,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S067",
+    "word": "listen",
+    "japanese": "聞く",
+    "chunk": "listen to ...",
+    "model_sentence": "Listen to this song.",
+    "scene_idea": "イヤホンを片方友達に渡している。",
+    "teacher_prompt": "What might she say?",
+    "function": "PERCEPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 573,
+    "ngsl_spoken_rank": 446,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S068",
+    "word": "hear",
+    "japanese": "聞こえる",
+    "chunk": "hear ...",
+    "model_sentence": "I can hear music.",
+    "scene_idea": "音のする方向に耳を傾けている。",
+    "teacher_prompt": "What does he notice?",
+    "function": "PERCEPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 178,
+    "ngsl_spoken_rank": 163,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S069",
+    "word": "read",
+    "japanese": "読む",
+    "chunk": "read ...",
+    "model_sentence": "She's reading a message.",
+    "scene_idea": "スマホに届いたメッセージを読んでいる。",
+    "teacher_prompt": "What is she doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 207,
+    "ngsl_spoken_rank": 153,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S070",
+    "word": "write",
+    "japanese": "書く",
+    "chunk": "write ...",
+    "model_sentence": "Write your name here.",
+    "scene_idea": "用紙の名前欄を指している。",
+    "teacher_prompt": "What should he do?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 121,
+    "ngsl_spoken_rank": 183,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S071",
+    "word": "study",
+    "japanese": "勉強する",
+    "chunk": "study ...",
+    "model_sentence": "I'm studying English.",
+    "scene_idea": "教科書とノートを広げて学習している。",
+    "teacher_prompt": "What is she doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 187,
+    "ngsl_spoken_rank": 526,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S072",
+    "word": "learn",
+    "japanese": "学ぶ",
+    "chunk": "learn about ...",
+    "model_sentence": "We learned about Canada.",
+    "scene_idea": "カナダの地図や写真を見ながら学習している。",
+    "teacher_prompt": "What are they learning about?",
+    "function": "LEARNING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 261,
+    "ngsl_spoken_rank": 365,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S073",
+    "word": "teach",
+    "japanese": "教える",
+    "chunk": "teach someone ...",
+    "model_sentence": "She teaches me how to play.",
+    "scene_idea": "友達に楽器の弾き方を教えている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "LEARNING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 539,
+    "ngsl_spoken_rank": 419,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S074",
+    "word": "practice",
+    "japanese": "練習する",
+    "chunk": "practice ...",
+    "model_sentence": "He's practicing the piano.",
+    "scene_idea": "ピアノを繰り返し練習している。",
+    "teacher_prompt": "What is he doing?",
+    "function": "LEARNING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "noun",
+    "ngsl_rank": 484,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S075",
+    "word": "play",
+    "japanese": "する・演奏する",
+    "chunk": "play ...",
+    "model_sentence": "They are playing basketball.",
+    "scene_idea": "体育館でバスケットボールをしている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 158,
+    "ngsl_spoken_rank": 194,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S076",
+    "word": "work",
+    "japanese": "働く・機能する",
+    "chunk": "work on ...",
+    "model_sentence": "We're working on a project.",
+    "scene_idea": "グループで一つの課題に取り組んでいる。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 67,
+    "ngsl_spoken_rank": 76,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S077",
+    "word": "buy",
+    "japanese": "買う",
+    "chunk": "buy ...",
+    "model_sentence": "I bought a new bag.",
+    "scene_idea": "店でバッグをレジに持っていく。",
+    "teacher_prompt": "What's happening?",
+    "function": "SHOPPING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 242,
+    "ngsl_spoken_rank": 192,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S078",
+    "word": "pay",
+    "japanese": "支払う",
+    "chunk": "pay for ...",
+    "model_sentence": "I'll pay for the tickets.",
+    "scene_idea": "チケット売り場で財布を出している。",
+    "teacher_prompt": "What is he doing?",
+    "function": "SHOPPING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 220,
+    "ngsl_spoken_rank": 166,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S079",
+    "word": "order",
+    "japanese": "注文する",
+    "chunk": "order ...",
+    "model_sentence": "I'd like to order this.",
+    "scene_idea": "メニューを指して店員に伝えている。",
+    "teacher_prompt": "What might she say?",
+    "function": "SHOPPING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 215,
+    "ngsl_spoken_rank": 338,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S080",
+    "word": "cook",
+    "japanese": "料理する",
+    "chunk": "cook ...",
+    "model_sentence": "He's cooking dinner.",
+    "scene_idea": "台所で夕食を作っている。",
+    "teacher_prompt": "What is he doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "noun, verb",
+    "ngsl_rank": 1196,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S081",
+    "word": "eat",
+    "japanese": "食べる",
+    "chunk": "eat ...",
+    "model_sentence": "They're eating lunch.",
+    "scene_idea": "昼食を食べている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 476,
+    "ngsl_spoken_rank": 311,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S082",
+    "word": "drink",
+    "japanese": "飲む",
+    "chunk": "drink ...",
+    "model_sentence": "She's drinking water.",
+    "scene_idea": "運動後に水を飲んでいる。",
+    "teacher_prompt": "What is she doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 655,
+    "ngsl_spoken_rank": 473,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S083",
+    "word": "open",
+    "japanese": "開ける",
+    "chunk": "open ...",
+    "model_sentence": "Please open the window.",
+    "scene_idea": "暑い教室で窓を指している。",
+    "teacher_prompt": "What might the teacher say?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, verb",
+    "ngsl_rank": 214,
+    "ngsl_spoken_rank": 288,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S084",
+    "word": "close",
+    "japanese": "閉める",
+    "chunk": "close ...",
+    "model_sentence": "Please close the door.",
+    "scene_idea": "開いたドアから寒い風が入っている。",
+    "teacher_prompt": "What might she say?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, verb",
+    "ngsl_rank": 239,
+    "ngsl_spoken_rank": 324,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S085",
+    "word": "sit",
+    "japanese": "座る",
+    "chunk": "sit down",
+    "model_sentence": "Please sit down.",
+    "scene_idea": "立っている人に空いた椅子を示している。",
+    "teacher_prompt": "What might he say?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 356,
+    "ngsl_spoken_rank": 220,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S086",
+    "word": "stand",
+    "japanese": "立つ",
+    "chunk": "stand up",
+    "model_sentence": "Please stand up.",
+    "scene_idea": "式の開始で全員が立とうとしている。",
+    "teacher_prompt": "What's happening?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 309,
+    "ngsl_spoken_rank": 356,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S087",
+    "word": "walk",
+    "japanese": "歩く",
+    "chunk": "walk to ...",
+    "model_sentence": "We walked to the station.",
+    "scene_idea": "駅へ向かって歩いている。",
+    "teacher_prompt": "How are they going there?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 339,
+    "ngsl_spoken_rank": 283,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S088",
+    "word": "run",
+    "japanese": "走る",
+    "chunk": "run ...",
+    "model_sentence": "He's running to school.",
+    "scene_idea": "時計を見ながら学校へ急いで走っている。",
+    "teacher_prompt": "Why is he running?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 192,
+    "ngsl_spoken_rank": 224,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S089",
+    "word": "swim",
+    "japanese": "泳ぐ",
+    "chunk": "swim in ...",
+    "model_sentence": "They are swimming in the pool.",
+    "scene_idea": "プールで泳いでいる。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "noun, verb",
+    "ngsl_rank": 1391,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S090",
+    "word": "ride",
+    "japanese": "乗る",
+    "chunk": "ride a bike",
+    "model_sentence": "She rides her bike to school.",
+    "scene_idea": "自転車で学校へ向かっている。",
+    "teacher_prompt": "How does she go to school?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "noun, verb",
+    "ngsl_rank": 1050,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S091",
+    "word": "drive",
+    "japanese": "運転する",
+    "chunk": "drive to ...",
+    "model_sentence": "My father drives to work.",
+    "scene_idea": "車を運転している。",
+    "teacher_prompt": "What is he doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 387,
+    "ngsl_spoken_rank": 354,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S092",
+    "word": "travel",
+    "japanese": "旅行する",
+    "chunk": "travel to ...",
+    "model_sentence": "We traveled to Osaka.",
+    "scene_idea": "スーツケースと地図を持って移動している。",
+    "teacher_prompt": "What are they doing?",
+    "function": "TRAVEL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 503,
+    "ngsl_spoken_rank": 651,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S093",
+    "word": "visit",
+    "japanese": "訪れる",
+    "chunk": "visit ...",
+    "model_sentence": "We visited the museum.",
+    "scene_idea": "博物館の入口で写真を撮っている。",
+    "teacher_prompt": "Where are they?",
+    "function": "TRAVEL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 333,
+    "ngsl_spoken_rank": 702,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S094",
+    "word": "stay",
+    "japanese": "滞在する",
+    "chunk": "stay at ...",
+    "model_sentence": "We stayed at a hotel.",
+    "scene_idea": "ホテルの部屋で荷物をほどいている。",
+    "teacher_prompt": "Where are they staying?",
+    "function": "TRAVEL",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 345,
+    "ngsl_spoken_rank": 304,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S095",
+    "word": "move",
+    "japanese": "動く・引っ越す",
+    "chunk": "move ...",
+    "model_sentence": "Please move this chair.",
+    "scene_idea": "椅子の位置を変えている。",
+    "teacher_prompt": "What is he doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 200,
+    "ngsl_spoken_rank": 185,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S096",
+    "word": "clean",
+    "japanese": "掃除する・きれいな",
+    "chunk": "clean ...",
+    "model_sentence": "They're cleaning the classroom.",
+    "scene_idea": "放課後に教室を掃除している。",
+    "teacher_prompt": "What are they doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, verb",
+    "ngsl_rank": 842,
+    "ngsl_spoken_rank": 608,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S097",
+    "word": "wash",
+    "japanese": "洗う",
+    "chunk": "wash ...",
+    "model_sentence": "Wash your hands.",
+    "scene_idea": "食事前に手を洗っている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "noun, verb",
+    "ngsl_rank": 1368,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S098",
+    "word": "wear",
+    "japanese": "身につける",
+    "chunk": "wear ...",
+    "model_sentence": "He's wearing a blue jacket.",
+    "scene_idea": "服装の違う2人を見比べる。",
+    "teacher_prompt": "What is he wearing?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 526,
+    "ngsl_spoken_rank": 441,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S099",
+    "word": "change",
+    "japanese": "変える",
+    "chunk": "change ...",
+    "model_sentence": "She changed her plan.",
+    "scene_idea": "予定表の行き先を消して書き直している。",
+    "teacher_prompt": "What did she do?",
+    "function": "DAILY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 113,
+    "ngsl_spoken_rank": 174,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S100",
+    "word": "send",
+    "japanese": "送る",
+    "chunk": "send ...",
+    "model_sentence": "I'll send you the photo.",
+    "scene_idea": "撮った写真をスマホで送ろうとしている。",
+    "teacher_prompt": "What is she going to do?",
+    "function": "COMMUNICATION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 323,
+    "ngsl_spoken_rank": 279,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S101",
+    "word": "receive",
+    "japanese": "受け取る",
+    "chunk": "receive ...",
+    "model_sentence": "I received a message.",
+    "scene_idea": "スマホに新着メッセージが届いている。",
+    "teacher_prompt": "What happened?",
+    "function": "COMMUNICATION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 396,
+    "ngsl_spoken_rank": 708,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S102",
+    "word": "lose",
+    "japanese": "なくす・負ける",
+    "chunk": "lose ...",
+    "model_sentence": "I lost my key.",
+    "scene_idea": "かばんの中を探して困っている。",
+    "teacher_prompt": "What's wrong?",
+    "function": "DAILY",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 305,
+    "ngsl_spoken_rank": 344,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S103",
+    "word": "win",
+    "japanese": "勝つ",
+    "chunk": "win ...",
+    "model_sentence": "Our team won the game.",
+    "scene_idea": "試合後にチームが喜んでいる。",
+    "teacher_prompt": "What happened?",
+    "function": "SPORT",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 377,
+    "ngsl_spoken_rank": 509,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S104",
+    "word": "build",
+    "japanese": "建てる・作る",
+    "chunk": "build ...",
+    "model_sentence": "They're building a small robot.",
+    "scene_idea": "部品を組み立ててロボットを作っている。",
+    "teacher_prompt": "What are they doing?",
+    "function": "MAKE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "verb",
+    "ngsl_rank": 221,
+    "ngsl_spoken_rank": 273,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S105",
+    "word": "draw",
+    "japanese": "描く",
+    "chunk": "draw ...",
+    "model_sentence": "She's drawing a picture.",
+    "scene_idea": "紙に絵を描いている。",
+    "teacher_prompt": "What is she doing?",
+    "function": "MAKE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "noun, verb",
+    "ngsl_rank": 481,
+    "ngsl_spoken_rank": 487,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S106",
+    "word": "take a photo",
+    "japanese": "写真を撮る",
+    "chunk": "take a photo of ...",
+    "model_sentence": "Can you take a photo of us?",
+    "scene_idea": "観光地でスマホを渡して撮影を頼んでいる。",
+    "teacher_prompt": "What are they asking?",
+    "function": "TRAVEL",
+    "cefr_j": "",
+    "tier": "PHRASE",
+    "pos": "phrase",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S107",
+    "word": "happy",
+    "japanese": "うれしい",
+    "chunk": "be happy about ...",
+    "model_sentence": "I'm happy about the news.",
+    "scene_idea": "よい知らせを見て笑顔になっている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 513,
+    "ngsl_spoken_rank": 434,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S108",
+    "word": "sad",
+    "japanese": "悲しい",
+    "chunk": "feel sad",
+    "model_sentence": "He looks sad.",
+    "scene_idea": "大切な試合に負けて肩を落としている。",
+    "teacher_prompt": "How does he feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1710,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S109",
+    "word": "angry",
+    "japanese": "怒っている",
+    "chunk": "be angry about ...",
+    "model_sentence": "She's angry about the mess.",
+    "scene_idea": "散らかった部屋を見て怒っている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1813,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S110",
+    "word": "afraid",
+    "japanese": "怖がって",
+    "chunk": "be afraid of ...",
+    "model_sentence": "He's afraid of the dog.",
+    "scene_idea": "大きな犬を前に少し後ずさりしている。",
+    "teacher_prompt": "How does he feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1353,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S111",
+    "word": "nervous",
+    "japanese": "緊張して",
+    "chunk": "feel nervous",
+    "model_sentence": "I'm nervous before a speech.",
+    "scene_idea": "発表直前に原稿を持って緊張している。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": 2078,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S112",
+    "word": "excited",
+    "japanese": "わくわくした",
+    "chunk": "be excited about ...",
+    "model_sentence": "We're excited about the trip.",
+    "scene_idea": "旅行前日に荷物を準備しながら喜んでいる。",
+    "teacher_prompt": "How do they feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S113",
+    "word": "surprised",
+    "japanese": "驚いた",
+    "chunk": "be surprised by ...",
+    "model_sentence": "I was surprised by the news.",
+    "scene_idea": "予想外のプレゼントを開けて驚いている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S114",
+    "word": "interested",
+    "japanese": "興味がある",
+    "chunk": "be interested in ...",
+    "model_sentence": "I'm interested in space.",
+    "scene_idea": "宇宙の本や写真を夢中で見ている。",
+    "teacher_prompt": "What is he interested in?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S115",
+    "word": "bored",
+    "japanese": "退屈した",
+    "chunk": "feel bored",
+    "model_sentence": "He looks bored.",
+    "scene_idea": "長い待ち時間に時計を何度も見ている。",
+    "teacher_prompt": "How does he feel?",
+    "function": "FEELING",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S116",
+    "word": "tired",
+    "japanese": "疲れた",
+    "chunk": "feel tired",
+    "model_sentence": "I'm tired after practice.",
+    "scene_idea": "部活動後にベンチに座り込んでいる。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S117",
+    "word": "busy",
+    "japanese": "忙しい",
+    "chunk": "be busy with ...",
+    "model_sentence": "I'm busy with homework.",
+    "scene_idea": "課題や予定が机いっぱいに広がっている。",
+    "teacher_prompt": "How is he doing?",
+    "function": "STATE",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1233,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S118",
+    "word": "hungry",
+    "japanese": "空腹の",
+    "chunk": "be hungry",
+    "model_sentence": "I'm hungry.",
+    "scene_idea": "昼休み前にお腹を押さえて時計を見ている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "STATE",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S119",
+    "word": "thirsty",
+    "japanese": "のどが渇いた",
+    "chunk": "be thirsty",
+    "model_sentence": "I'm thirsty.",
+    "scene_idea": "運動後に空の水筒を見ている。",
+    "teacher_prompt": "How does he feel?",
+    "function": "STATE",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S120",
+    "word": "ready",
+    "japanese": "準備ができた",
+    "chunk": "be ready for ...",
+    "model_sentence": "We're ready for the game.",
+    "scene_idea": "全員が用具を持って開始を待っている。",
+    "teacher_prompt": "Are they ready?",
+    "function": "STATE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 774,
+    "ngsl_spoken_rank": 499,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S121",
+    "word": "careful",
+    "japanese": "注意深い",
+    "chunk": "be careful with ...",
+    "model_sentence": "Be careful with the glass.",
+    "scene_idea": "割れ物を運んでいる友達に注意している。",
+    "teacher_prompt": "What might she say?",
+    "function": "STATE",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1637,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S122",
+    "word": "kind",
+    "japanese": "親切な",
+    "chunk": "be kind to ...",
+    "model_sentence": "She's kind to everyone.",
+    "scene_idea": "困っている人を自然に手伝っている。",
+    "teacher_prompt": "What is she like?",
+    "function": "PERSONALITY",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, noun",
+    "ngsl_rank": 176,
+    "ngsl_spoken_rank": 100,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S123",
+    "word": "friendly",
+    "japanese": "親しみやすい",
+    "chunk": "be friendly to ...",
+    "model_sentence": "Our new classmate is friendly.",
+    "scene_idea": "新しい生徒が笑顔で複数の人に話しかけている。",
+    "teacher_prompt": "What is he like?",
+    "function": "PERSONALITY",
+    "cefr_j": "",
+    "tier": "PHRASE",
+    "pos": "phrase",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S124",
+    "word": "proud",
+    "japanese": "誇りに思って",
+    "chunk": "be proud of ...",
+    "model_sentence": "I'm proud of my team.",
+    "scene_idea": "表彰状を持った仲間を笑顔で見ている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "FEELING",
+    "cefr_j": "",
+    "tier": "PHRASE",
+    "pos": "phrase",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S125",
+    "word": "sorry",
+    "japanese": "申し訳なく思って",
+    "chunk": "be sorry about ...",
+    "model_sentence": "I'm sorry I'm late.",
+    "scene_idea": "遅刻して教室に入り謝っている。",
+    "teacher_prompt": "What might he say?",
+    "function": "FEELING",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 765,
+    "ngsl_spoken_rank": 254,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S126",
+    "word": "good",
+    "japanese": "よい",
+    "chunk": "be good for ...",
+    "model_sentence": "Walking is good for you.",
+    "scene_idea": "健康的な活動と不健康な活動を見比べる。",
+    "teacher_prompt": "Which is better for you?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 56,
+    "ngsl_spoken_rank": 63,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S127",
+    "word": "bad",
+    "japanese": "悪い",
+    "chunk": "be bad for ...",
+    "model_sentence": "Too much sugar is bad for you.",
+    "scene_idea": "大量のお菓子と健康的な食事を見比べる。",
+    "teacher_prompt": "What do you think?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 268,
+    "ngsl_spoken_rank": 206,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S128",
+    "word": "important",
+    "japanese": "重要な",
+    "chunk": "It's important to ...",
+    "model_sentence": "It's important to listen.",
+    "scene_idea": "話す人を見ずに別のことをしている人がいる。",
+    "teacher_prompt": "What's important here?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 190,
+    "ngsl_spoken_rank": 243,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S129",
+    "word": "different",
+    "japanese": "異なる",
+    "chunk": "be different from ...",
+    "model_sentence": "This is different from mine.",
+    "scene_idea": "似ている2つの物に小さな違いがある。",
+    "teacher_prompt": "What do you notice?",
+    "function": "COMPARE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 149,
+    "ngsl_spoken_rank": 143,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S130",
+    "word": "same",
+    "japanese": "同じ",
+    "chunk": "the same as ...",
+    "model_sentence": "Mine is the same as yours.",
+    "scene_idea": "2人が同じデザインの物を持っている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "COMPARE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb, pronoun",
+    "ngsl_rank": 122,
+    "ngsl_spoken_rank": 137,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S131",
+    "word": "easy",
+    "japanese": "簡単な",
+    "chunk": "It's easy to ...",
+    "model_sentence": "This game is easy to learn.",
+    "scene_idea": "簡単にできる課題と難しい課題を見比べる。",
+    "teacher_prompt": "How does it look?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 408,
+    "ngsl_spoken_rank": 345,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S132",
+    "word": "difficult",
+    "japanese": "難しい",
+    "chunk": "It's difficult to ...",
+    "model_sentence": "This question is difficult.",
+    "scene_idea": "問題を前に複数人が悩んでいる。",
+    "teacher_prompt": "How does it look?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 470,
+    "ngsl_spoken_rank": 418,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S133",
+    "word": "interesting",
+    "japanese": "興味深い・おもしろい",
+    "chunk": "find ... interesting",
+    "model_sentence": "I found the story interesting.",
+    "scene_idea": "本を夢中で読んでいる。",
+    "teacher_prompt": "What does she think of it?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S134",
+    "word": "useful",
+    "japanese": "役に立つ",
+    "chunk": "be useful for ...",
+    "model_sentence": "This app is useful for studying.",
+    "scene_idea": "学習で便利に使っている道具やアプリを見せる。",
+    "teacher_prompt": "Why are they using it?",
+    "function": "EVALUATION",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 918,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S135",
+    "word": "popular",
+    "japanese": "人気のある",
+    "chunk": "be popular with ...",
+    "model_sentence": "This song is popular with students.",
+    "scene_idea": "多くの生徒が同じ曲を聞いたり話題にしている。",
+    "teacher_prompt": "What can you guess?",
+    "function": "EVALUATION",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 790,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S136",
+    "word": "famous",
+    "japanese": "有名な",
+    "chunk": "be famous for ...",
+    "model_sentence": "The city is famous for ramen.",
+    "scene_idea": "観光客が同じ名物の店に集まっている。",
+    "teacher_prompt": "Why do people come here?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1017,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S137",
+    "word": "beautiful",
+    "japanese": "美しい",
+    "chunk": "look beautiful",
+    "model_sentence": "The view is beautiful.",
+    "scene_idea": "景色を見て立ち止まり写真を撮っている。",
+    "teacher_prompt": "What do they think of the view?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 792,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S138",
+    "word": "big",
+    "japanese": "大きい",
+    "chunk": "a big ...",
+    "model_sentence": "That's a big dog.",
+    "scene_idea": "大きさの違う物が並んでいる。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 184,
+    "ngsl_spoken_rank": 138,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S139",
+    "word": "small",
+    "japanese": "小さい",
+    "chunk": "a small ...",
+    "model_sentence": "This bag is too small.",
+    "scene_idea": "荷物がバッグに入りきらない。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 186,
+    "ngsl_spoken_rank": 322,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S140",
+    "word": "long",
+    "japanese": "長い",
+    "chunk": "a long ...",
+    "model_sentence": "It's a long line.",
+    "scene_idea": "店の前に長い列ができている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 115,
+    "ngsl_spoken_rank": 145,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S141",
+    "word": "short",
+    "japanese": "短い",
+    "chunk": "a short ...",
+    "model_sentence": "The movie is short.",
+    "scene_idea": "長さの違う動画や時間表示を比べる。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 419,
+    "ngsl_spoken_rank": 416,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S142",
+    "word": "high",
+    "japanese": "高い",
+    "chunk": "a high ...",
+    "model_sentence": "The mountain is very high.",
+    "scene_idea": "山を見上げている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 148,
+    "ngsl_spoken_rank": 271,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S143",
+    "word": "low",
+    "japanese": "低い",
+    "chunk": "a low ...",
+    "model_sentence": "The table is too low.",
+    "scene_idea": "背の高い人が低い机を使いにくそうにしている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 283,
+    "ngsl_spoken_rank": 488,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S144",
+    "word": "old",
+    "japanese": "古い・年を取った",
+    "chunk": "an old ...",
+    "model_sentence": "This building is very old.",
+    "scene_idea": "新しい建物と古い建物を見比べる。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 144,
+    "ngsl_spoken_rank": 171,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S145",
+    "word": "young",
+    "japanese": "若い",
+    "chunk": "a young ...",
+    "model_sentence": "She's a young player.",
+    "scene_idea": "年齢の違う選手が並んでいる。",
+    "teacher_prompt": "What can you say about her?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 238,
+    "ngsl_spoken_rank": 366,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S146",
+    "word": "new",
+    "japanese": "新しい",
+    "chunk": "a new ...",
+    "model_sentence": "I got a new phone.",
+    "scene_idea": "箱から新しい物を出している。",
+    "teacher_prompt": "What happened?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 79,
+    "ngsl_spoken_rank": 177,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S147",
+    "word": "early",
+    "japanese": "早く・早い",
+    "chunk": "get up early",
+    "model_sentence": "I got up early today.",
+    "scene_idea": "まだ暗い時間に制服で家を出ようとしている。",
+    "teacher_prompt": "What time might it be?",
+    "function": "TIME",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 197,
+    "ngsl_spoken_rank": 313,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S148",
+    "word": "late",
+    "japanese": "遅い・遅れて",
+    "chunk": "be late for ...",
+    "model_sentence": "I'm late for school.",
+    "scene_idea": "時計を見て慌てて走っている。",
+    "teacher_prompt": "Why is he running?",
+    "function": "TIME",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 147,
+    "ngsl_spoken_rank": 244,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S149",
+    "word": "fast",
+    "japanese": "速い",
+    "chunk": "run fast",
+    "model_sentence": "She can run fast.",
+    "scene_idea": "競走で一人が大きく前に出ている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 631,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S150",
+    "word": "slow",
+    "japanese": "遅い・ゆっくりした",
+    "chunk": "move slowly",
+    "model_sentence": "The bus is moving slowly.",
+    "scene_idea": "渋滞の中でバスがなかなか進まない。",
+    "teacher_prompt": "What's happening?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, adverb, verb",
+    "ngsl_rank": 1118,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S151",
+    "word": "strong",
+    "japanese": "強い",
+    "chunk": "be strong enough to ...",
+    "model_sentence": "He's strong enough to lift it.",
+    "scene_idea": "重い物を一人で持ち上げている。",
+    "teacher_prompt": "What can he do?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 461,
+    "ngsl_spoken_rank": 604,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S152",
+    "word": "weak",
+    "japanese": "弱い",
+    "chunk": "feel weak",
+    "model_sentence": "I felt weak after being sick.",
+    "scene_idea": "体調回復直後で力が出ない様子。",
+    "teacher_prompt": "How does he feel?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": 1685,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S153",
+    "word": "hot",
+    "japanese": "暑い・熱い",
+    "chunk": "be hot",
+    "model_sentence": "It's hot today.",
+    "scene_idea": "暑い日に扇いだり水を飲んでいる。",
+    "teacher_prompt": "How's the weather?",
+    "function": "WEATHER",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 885,
+    "ngsl_spoken_rank": 675,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S154",
+    "word": "cold",
+    "japanese": "寒い・冷たい",
+    "chunk": "be cold",
+    "model_sentence": "It's cold outside.",
+    "scene_idea": "厚着をして震えながら外を歩いている。",
+    "teacher_prompt": "How's the weather?",
+    "function": "WEATHER",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, noun",
+    "ngsl_rank": 867,
+    "ngsl_spoken_rank": 622,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S155",
+    "word": "warm",
+    "japanese": "暖かい",
+    "chunk": "be warm",
+    "model_sentence": "The room is warm.",
+    "scene_idea": "寒い外から暖かい室内へ入りほっとしている。",
+    "teacher_prompt": "How does the room feel?",
+    "function": "WEATHER",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, verb",
+    "ngsl_rank": 1021,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S156",
+    "word": "cool",
+    "japanese": "涼しい・かっこいい",
+    "chunk": "look cool",
+    "model_sentence": "That jacket looks cool.",
+    "scene_idea": "友達の服装を見て好意的な反応をしている。",
+    "teacher_prompt": "What does he think?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1156,
+    "ngsl_spoken_rank": 611,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S157",
+    "word": "heavy",
+    "japanese": "重い",
+    "chunk": "a heavy ...",
+    "model_sentence": "This box is heavy.",
+    "scene_idea": "箱を持ち上げるのに苦労している。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1052,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S158",
+    "word": "light",
+    "japanese": "軽い・明るい",
+    "chunk": "a light ...",
+    "model_sentence": "This bag is light.",
+    "scene_idea": "見た目より簡単にバッグを持ち上げている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, noun, verb",
+    "ngsl_rank": 349,
+    "ngsl_spoken_rank": 433,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S159",
+    "word": "dirty",
+    "japanese": "汚れた",
+    "chunk": "get dirty",
+    "model_sentence": "My shoes are dirty.",
+    "scene_idea": "泥だらけの靴を見ている。",
+    "teacher_prompt": "What happened?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 2255,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S160",
+    "word": "safe",
+    "japanese": "安全な",
+    "chunk": "be safe to ...",
+    "model_sentence": "It's safe to cross now.",
+    "scene_idea": "信号が青になり横断しようとしている。",
+    "teacher_prompt": "Can they cross now?",
+    "function": "SAFETY",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1027,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S161",
+    "word": "dangerous",
+    "japanese": "危険な",
+    "chunk": "It's dangerous to ...",
+    "model_sentence": "It's dangerous to use your phone here.",
+    "scene_idea": "危険な場所でスマホを見ながら歩いている。",
+    "teacher_prompt": "What's wrong with this scene?",
+    "function": "SAFETY",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": 1419,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S162",
+    "word": "possible",
+    "japanese": "可能な",
+    "chunk": "It's possible to ...",
+    "model_sentence": "It's possible to finish today.",
+    "scene_idea": "残り時間と作業量を見て計画している。",
+    "teacher_prompt": "Can they finish?",
+    "function": "EVALUATION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 290,
+    "ngsl_spoken_rank": 483,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S163",
+    "word": "special",
+    "japanese": "特別な",
+    "chunk": "a special ...",
+    "model_sentence": "Today is a special day.",
+    "scene_idea": "誕生日など特別な飾り付けがある。",
+    "teacher_prompt": "What's special today?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 443,
+    "ngsl_spoken_rank": 590,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S164",
+    "word": "common",
+    "japanese": "よくある・共通の",
+    "chunk": "be common in ...",
+    "model_sentence": "This is common in Japan.",
+    "scene_idea": "多くの場所で同じ習慣が見られる。",
+    "teacher_prompt": "What do you notice?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 567,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S165",
+    "word": "favorite",
+    "japanese": "いちばん好きな",
+    "chunk": "my favorite ...",
+    "model_sentence": "This is my favorite song.",
+    "scene_idea": "複数の選択肢の中で一つだけ特に喜んで選ぶ。",
+    "teacher_prompt": "Which one does she like best?",
+    "function": "PREFERENCE",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, noun",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S166",
+    "word": "free",
+    "japanese": "暇な・無料の",
+    "chunk": "be free after ...",
+    "model_sentence": "I'm free after school.",
+    "scene_idea": "予定表の放課後が空いている。",
+    "teacher_prompt": "When is he free?",
+    "function": "TIME",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 395,
+    "ngsl_spoken_rank": 554,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S167",
+    "word": "full",
+    "japanese": "いっぱいの",
+    "chunk": "be full of ...",
+    "model_sentence": "The bus is full.",
+    "scene_idea": "満員のバスに乗れず困っている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective",
+    "ngsl_rank": 410,
+    "ngsl_spoken_rank": 393,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S168",
+    "word": "empty",
+    "japanese": "空の",
+    "chunk": "an empty ...",
+    "model_sentence": "My bottle is empty.",
+    "scene_idea": "運動後に空の水筒を逆さにしている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A2",
+    "tier": "RECEPTIVE_ACTIVITY",
+    "pos": "adjective",
+    "ngsl_rank": 1592,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S169",
+    "word": "quiet",
+    "japanese": "静かな",
+    "chunk": "be quiet",
+    "model_sentence": "The library is quiet.",
+    "scene_idea": "図書館で小声で話している。",
+    "teacher_prompt": "What is this place like?",
+    "function": "DESCRIPTION",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1313,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S170",
+    "word": "loud",
+    "japanese": "大きな音の",
+    "chunk": "a loud sound",
+    "model_sentence": "The music is too loud.",
+    "scene_idea": "耳をふさいで音量を下げようとしている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "DESCRIPTION",
+    "cefr_j": "",
+    "tier": "PHRASE",
+    "pos": "phrase",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S171",
+    "word": "healthy",
+    "japanese": "健康的な",
+    "chunk": "be healthy",
+    "model_sentence": "Walking every day is healthy.",
+    "scene_idea": "日常的な運動をしている。",
+    "teacher_prompt": "Is this a good habit?",
+    "function": "HEALTH",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1362,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S172",
+    "word": "sick",
+    "japanese": "病気の・気分が悪い",
+    "chunk": "feel sick",
+    "model_sentence": "I feel sick.",
+    "scene_idea": "授業中に顔色が悪く保健室へ行こうとしている。",
+    "teacher_prompt": "How does she feel?",
+    "function": "HEALTH",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1716,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S173",
+    "word": "delicious",
+    "japanese": "おいしい",
+    "chunk": "look delicious",
+    "model_sentence": "This soup is delicious.",
+    "scene_idea": "料理を食べて笑顔になっている。",
+    "teacher_prompt": "What does he think of it?",
+    "function": "FOOD",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": null,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S174",
+    "word": "sweet",
+    "japanese": "甘い",
+    "chunk": "taste sweet",
+    "model_sentence": "This cake is very sweet.",
+    "scene_idea": "ケーキを食べた反応から味を推測する。",
+    "teacher_prompt": "How does it taste?",
+    "function": "FOOD",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective, noun",
+    "ngsl_rank": 1781,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S175",
+    "word": "expensive",
+    "japanese": "高価な",
+    "chunk": "be expensive",
+    "model_sentence": "This bag is too expensive.",
+    "scene_idea": "値札を見て驚いている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "SHOPPING",
+    "cefr_j": "A1",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1061,
+    "ngsl_spoken_rank": null,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S176",
+    "word": "cheap",
+    "japanese": "安い",
+    "chunk": "be cheap",
+    "model_sentence": "These tickets are cheap.",
+    "scene_idea": "値段を比べて安い方を喜んで選んでいる。",
+    "teacher_prompt": "Why did they choose these?",
+    "function": "SHOPPING",
+    "cefr_j": "A2",
+    "tier": "ACTIVE",
+    "pos": "adjective",
+    "ngsl_rank": 1095,
+    "ngsl_spoken_rank": 707,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S177",
+    "word": "near",
+    "japanese": "近い",
+    "chunk": "be near ...",
+    "model_sentence": "The station is near my house.",
+    "scene_idea": "地図上で家と駅が近くにある。",
+    "teacher_prompt": "What do you notice?",
+    "function": "PLACE",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb, preposition",
+    "ngsl_rank": 427,
+    "ngsl_spoken_rank": 559,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S178",
+    "word": "far",
+    "japanese": "遠い",
+    "chunk": "be far from ...",
+    "model_sentence": "The airport is far from here.",
+    "scene_idea": "地図上で目的地が遠く困っている。",
+    "teacher_prompt": "What's the problem?",
+    "function": "PLACE",
+    "cefr_j": "A2",
+    "tier": "CORE",
+    "pos": "adverb",
+    "ngsl_rank": 245,
+    "ngsl_spoken_rank": 253,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S179",
+    "word": "right",
+    "japanese": "正しい",
+    "chunk": "be right",
+    "model_sentence": "Your answer is right.",
+    "scene_idea": "答え合わせで丸が付いている。",
+    "teacher_prompt": "What happened?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb, noun",
+    "ngsl_rank": 92,
+    "ngsl_spoken_rank": 48,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  },
+  {
+    "id": "S180",
+    "word": "wrong",
+    "japanese": "間違っている",
+    "chunk": "be wrong",
+    "model_sentence": "This answer is wrong.",
+    "scene_idea": "答え合わせで一つだけ訂正が入っている。",
+    "teacher_prompt": "What do you notice?",
+    "function": "EVALUATION",
+    "cefr_j": "A1",
+    "tier": "CORE",
+    "pos": "adjective, adverb",
+    "ngsl_rank": 575,
+    "ngsl_spoken_rank": 343,
+    "image_status": "TO_CREATE",
+    "default_enabled": true
+  }
+]
+</script>
+<script type="application/json" id="vt-data-which-one-sets">
+[
+  {
+    "id": "WQ001",
+    "type": "QUICK",
+    "label": "fruit",
+    "words": [
+      "apple",
+      "banana",
+      "orange",
+      "pencil"
+    ],
+    "suggested_answer": "pencil",
+    "sample_ideas": [
+      "3 fruits + 1 school item"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ002",
+    "type": "QUICK",
+    "label": "vegetables",
+    "words": [
+      "carrot",
+      "onion",
+      "potato",
+      "bus"
+    ],
+    "suggested_answer": "bus",
+    "sample_ideas": [
+      "3 vegetables + 1 vehicle"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ003",
+    "type": "QUICK",
+    "label": "animals",
+    "words": [
+      "dog",
+      "cat",
+      "horse",
+      "book"
+    ],
+    "suggested_answer": "book",
+    "sample_ideas": [
+      "3 animals + 1 object"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ004",
+    "type": "QUICK",
+    "label": "sea",
+    "words": [
+      "fish",
+      "whale",
+      "dolphin",
+      "teacher"
+    ],
+    "suggested_answer": "teacher",
+    "sample_ideas": [
+      "3 sea animals + 1 person"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ005",
+    "type": "QUICK",
+    "label": "birds",
+    "words": [
+      "bird",
+      "eagle",
+      "duck",
+      "train"
+    ],
+    "suggested_answer": "train",
+    "sample_ideas": [
+      "3 birds + 1 vehicle"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ006",
+    "type": "QUICK",
+    "label": "transport",
+    "words": [
+      "bus",
+      "train",
+      "bike",
+      "cake"
+    ],
+    "suggested_answer": "cake",
+    "sample_ideas": [
+      "3 kinds of transport + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ007",
+    "type": "QUICK",
+    "label": "school_items",
+    "words": [
+      "pen",
+      "pencil",
+      "ruler",
+      "tiger"
+    ],
+    "suggested_answer": "tiger",
+    "sample_ideas": [
+      "3 school items + 1 animal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ008",
+    "type": "QUICK",
+    "label": "places",
+    "words": [
+      "hospital",
+      "station",
+      "library",
+      "banana"
+    ],
+    "suggested_answer": "banana",
+    "sample_ideas": [
+      "3 places + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ009",
+    "type": "QUICK",
+    "label": "jobs",
+    "words": [
+      "teacher",
+      "doctor",
+      "nurse",
+      "river"
+    ],
+    "suggested_answer": "river",
+    "sample_ideas": [
+      "3 jobs + 1 natural feature"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ010",
+    "type": "QUICK",
+    "label": "sports",
+    "words": [
+      "soccer",
+      "tennis",
+      "baseball",
+      "piano"
+    ],
+    "suggested_answer": "piano",
+    "sample_ideas": [
+      "3 sports + 1 instrument"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ011",
+    "type": "QUICK",
+    "label": "instruments",
+    "words": [
+      "piano",
+      "guitar",
+      "trumpet",
+      "bus"
+    ],
+    "suggested_answer": "bus",
+    "sample_ideas": [
+      "3 instruments + 1 vehicle"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ012",
+    "type": "QUICK",
+    "label": "drinks",
+    "words": [
+      "water",
+      "tea",
+      "milk",
+      "shoe"
+    ],
+    "suggested_answer": "shoe",
+    "sample_ideas": [
+      "3 drinks + 1 clothing item"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ013",
+    "type": "QUICK",
+    "label": "clothes",
+    "words": [
+      "shirt",
+      "jacket",
+      "pants",
+      "apple"
+    ],
+    "suggested_answer": "apple",
+    "sample_ideas": [
+      "3 clothes + 1 fruit"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ014",
+    "type": "QUICK",
+    "label": "colors",
+    "words": [
+      "red",
+      "blue",
+      "green",
+      "doctor"
+    ],
+    "suggested_answer": "doctor",
+    "sample_ideas": [
+      "3 colors + 1 job"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ015",
+    "type": "QUICK",
+    "label": "weather",
+    "words": [
+      "sunny",
+      "rainy",
+      "cloudy",
+      "pencil"
+    ],
+    "suggested_answer": "pencil",
+    "sample_ideas": [
+      "3 weather words + 1 object"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ016",
+    "type": "QUICK",
+    "label": "feelings",
+    "words": [
+      "happy",
+      "sad",
+      "angry",
+      "station"
+    ],
+    "suggested_answer": "station",
+    "sample_ideas": [
+      "3 feelings + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ017",
+    "type": "QUICK",
+    "label": "actions_move",
+    "words": [
+      "walk",
+      "run",
+      "swim",
+      "beautiful"
+    ],
+    "suggested_answer": "beautiful",
+    "sample_ideas": [
+      "3 action verbs + 1 adjective"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ018",
+    "type": "QUICK",
+    "label": "actions_school",
+    "words": [
+      "read",
+      "write",
+      "study",
+      "banana"
+    ],
+    "suggested_answer": "banana",
+    "sample_ideas": [
+      "3 school actions + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ019",
+    "type": "QUICK",
+    "label": "adjectives_size",
+    "words": [
+      "big",
+      "small",
+      "long",
+      "teacher"
+    ],
+    "suggested_answer": "teacher",
+    "sample_ideas": [
+      "3 describing words + 1 noun"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ020",
+    "type": "QUICK",
+    "label": "adjectives_quality",
+    "words": [
+      "good",
+      "bad",
+      "useful",
+      "train"
+    ],
+    "suggested_answer": "train",
+    "sample_ideas": [
+      "3 evaluative adjectives + 1 noun"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ021",
+    "type": "QUICK",
+    "label": "time_day",
+    "words": [
+      "morning",
+      "afternoon",
+      "evening",
+      "cat"
+    ],
+    "suggested_answer": "cat",
+    "sample_ideas": [
+      "3 times of day + 1 animal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ022",
+    "type": "QUICK",
+    "label": "seasons",
+    "words": [
+      "spring",
+      "summer",
+      "winter",
+      "piano"
+    ],
+    "suggested_answer": "piano",
+    "sample_ideas": [
+      "3 seasons + 1 instrument"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ023",
+    "type": "QUICK",
+    "label": "family",
+    "words": [
+      "mother",
+      "father",
+      "sister",
+      "hospital"
+    ],
+    "suggested_answer": "hospital",
+    "sample_ideas": [
+      "3 family members + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ024",
+    "type": "QUICK",
+    "label": "rooms",
+    "words": [
+      "kitchen",
+      "bedroom",
+      "bathroom",
+      "soccer"
+    ],
+    "suggested_answer": "soccer",
+    "sample_ideas": [
+      "3 rooms + 1 sport"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ025",
+    "type": "QUICK",
+    "label": "body",
+    "words": [
+      "hand",
+      "foot",
+      "eye",
+      "bus"
+    ],
+    "suggested_answer": "bus",
+    "sample_ideas": [
+      "3 body parts + 1 vehicle"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ026",
+    "type": "QUICK",
+    "label": "food_meals",
+    "words": [
+      "breakfast",
+      "lunch",
+      "dinner",
+      "pencil"
+    ],
+    "suggested_answer": "pencil",
+    "sample_ideas": [
+      "3 meals + 1 object"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ027",
+    "type": "QUICK",
+    "label": "technology",
+    "words": [
+      "computer",
+      "phone",
+      "camera",
+      "banana"
+    ],
+    "suggested_answer": "banana",
+    "sample_ideas": [
+      "3 devices + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ028",
+    "type": "QUICK",
+    "label": "nature",
+    "words": [
+      "mountain",
+      "river",
+      "sea",
+      "teacher"
+    ],
+    "suggested_answer": "teacher",
+    "sample_ideas": [
+      "3 natural places + 1 person"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ029",
+    "type": "QUICK",
+    "label": "city",
+    "words": [
+      "park",
+      "station",
+      "hospital",
+      "tiger"
+    ],
+    "suggested_answer": "tiger",
+    "sample_ideas": [
+      "3 places in a town + 1 animal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ030",
+    "type": "QUICK",
+    "label": "study_subjects",
+    "words": [
+      "English",
+      "math",
+      "science",
+      "apple"
+    ],
+    "suggested_answer": "apple",
+    "sample_ideas": [
+      "3 school subjects + 1 fruit"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ031",
+    "type": "QUICK",
+    "label": "days",
+    "words": [
+      "Monday",
+      "Tuesday",
+      "Friday",
+      "dog"
+    ],
+    "suggested_answer": "dog",
+    "sample_ideas": [
+      "3 days + 1 animal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ032",
+    "type": "QUICK",
+    "label": "months",
+    "words": [
+      "April",
+      "June",
+      "October",
+      "book"
+    ],
+    "suggested_answer": "book",
+    "sample_ideas": [
+      "3 months + 1 object"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ033",
+    "type": "QUICK",
+    "label": "directions",
+    "words": [
+      "left",
+      "right",
+      "straight",
+      "milk"
+    ],
+    "suggested_answer": "milk",
+    "sample_ideas": [
+      "3 direction words + 1 drink"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ034",
+    "type": "QUICK",
+    "label": "frequency",
+    "words": [
+      "always",
+      "usually",
+      "sometimes",
+      "hospital"
+    ],
+    "suggested_answer": "hospital",
+    "sample_ideas": [
+      "3 frequency adverbs + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ035",
+    "type": "QUICK",
+    "label": "opinion",
+    "words": [
+      "think",
+      "believe",
+      "agree",
+      "carrot"
+    ],
+    "suggested_answer": "carrot",
+    "sample_ideas": [
+      "3 thinking/opinion verbs + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ036",
+    "type": "QUICK",
+    "label": "communication",
+    "words": [
+      "ask",
+      "answer",
+      "tell",
+      "mountain"
+    ],
+    "suggested_answer": "mountain",
+    "sample_ideas": [
+      "3 communication verbs + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ037",
+    "type": "QUICK",
+    "label": "shopping",
+    "words": [
+      "buy",
+      "pay",
+      "order",
+      "swim"
+    ],
+    "suggested_answer": "swim",
+    "sample_ideas": [
+      "3 shopping/restaurant actions + 1 movement action"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ038",
+    "type": "QUICK",
+    "label": "travel_actions",
+    "words": [
+      "travel",
+      "visit",
+      "stay",
+      "sweet"
+    ],
+    "suggested_answer": "sweet",
+    "sample_ideas": [
+      "3 travel-related verbs + 1 adjective"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ039",
+    "type": "QUICK",
+    "label": "health",
+    "words": [
+      "healthy",
+      "sick",
+      "tired",
+      "train"
+    ],
+    "suggested_answer": "train",
+    "sample_ideas": [
+      "3 health/state words + 1 vehicle"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ040",
+    "type": "QUICK",
+    "label": "taste",
+    "words": [
+      "sweet",
+      "delicious",
+      "hot",
+      "library"
+    ],
+    "suggested_answer": "library",
+    "sample_ideas": [
+      "3 food/taste-related words + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ041",
+    "type": "QUICK",
+    "label": "distance",
+    "words": [
+      "near",
+      "far",
+      "close",
+      "banana"
+    ],
+    "suggested_answer": "banana",
+    "sample_ideas": [
+      "3 distance/location words + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ042",
+    "type": "QUICK",
+    "label": "sound",
+    "words": [
+      "quiet",
+      "loud",
+      "hear",
+      "carrot"
+    ],
+    "suggested_answer": "carrot",
+    "sample_ideas": [
+      "3 sound-related words + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ043",
+    "type": "QUICK",
+    "label": "learning",
+    "words": [
+      "learn",
+      "teach",
+      "practice",
+      "river"
+    ],
+    "suggested_answer": "river",
+    "sample_ideas": [
+      "3 learning-related actions + 1 natural feature"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ044",
+    "type": "QUICK",
+    "label": "choice",
+    "words": [
+      "choose",
+      "decide",
+      "prefer",
+      "tiger"
+    ],
+    "suggested_answer": "tiger",
+    "sample_ideas": [
+      "3 choice-related verbs + 1 animal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ045",
+    "type": "QUICK",
+    "label": "social",
+    "words": [
+      "invite",
+      "join",
+      "meet",
+      "potato"
+    ],
+    "suggested_answer": "potato",
+    "sample_ideas": [
+      "3 social actions + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ046",
+    "type": "QUICK",
+    "label": "making",
+    "words": [
+      "make",
+      "build",
+      "draw",
+      "hospital"
+    ],
+    "suggested_answer": "hospital",
+    "sample_ideas": [
+      "3 creating actions + 1 place"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ047",
+    "type": "QUICK",
+    "label": "cleaning",
+    "words": [
+      "clean",
+      "wash",
+      "open",
+      "banana"
+    ],
+    "suggested_answer": "banana",
+    "sample_ideas": [
+      "3 everyday actions + 1 food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ048",
+    "type": "QUICK",
+    "label": "movement",
+    "words": [
+      "arrive",
+      "leave",
+      "wait",
+      "beautiful"
+    ],
+    "suggested_answer": "beautiful",
+    "sample_ideas": [
+      "3 travel/time actions + 1 adjective"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ049",
+    "type": "QUICK",
+    "label": "description",
+    "words": [
+      "big",
+      "heavy",
+      "dirty",
+      "teacher"
+    ],
+    "suggested_answer": "teacher",
+    "sample_ideas": [
+      "3 physical descriptions + 1 noun"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WQ050",
+    "type": "QUICK",
+    "label": "evaluation",
+    "words": [
+      "important",
+      "useful",
+      "popular",
+      "bus"
+    ],
+    "suggested_answer": "bus",
+    "sample_ideas": [
+      "3 evaluation adjectives + 1 noun"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "想定解あり。ただし筋の通った別解も歓迎。"
+  },
+  {
+    "id": "WM001",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "dog",
+      "cat",
+      "bird",
+      "fish"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "fish: lives in water",
+      "bird: can fly",
+      "dog: often helps people",
+      "cat: says meow"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM002",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "apple",
+      "banana",
+      "lemon",
+      "tomato"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "banana: usually peeled before eating",
+      "lemon: very sour",
+      "tomato: often treated as a vegetable",
+      "apple: often eaten with the skin"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM003",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "bus",
+      "train",
+      "bike",
+      "airplane"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "bike: usually one person powers it",
+      "airplane: flies",
+      "train: runs on rails",
+      "bus: travels on roads and carries many people"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM004",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "soccer",
+      "tennis",
+      "baseball",
+      "swimming"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "swimming: no ball",
+      "tennis: usually uses a racket",
+      "baseball: uses a bat",
+      "soccer: players mainly use their feet"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM005",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "teacher",
+      "doctor",
+      "cook",
+      "farmer"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "farmer: often works outdoors",
+      "doctor: works with patients",
+      "teacher: works with students",
+      "cook: works with food"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM006",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "book",
+      "movie",
+      "song",
+      "game"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "book: mainly read",
+      "song: mainly listened to",
+      "movie: mainly watched",
+      "game: usually played"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM007",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "morning",
+      "afternoon",
+      "evening",
+      "night"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "morning: comes after waking up",
+      "night: usually darkest",
+      "afternoon: after noon",
+      "evening: often around dinner time"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM008",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "hot",
+      "cold",
+      "warm",
+      "cool"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "hot: highest temperature",
+      "cold: lowest temperature",
+      "warm/cool: middle temperatures; students can justify either"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM009",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "big",
+      "small",
+      "long",
+      "short"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "big/small: overall size",
+      "long/short: length",
+      "any answer can work with a comparison context"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM010",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "happy",
+      "sad",
+      "angry",
+      "nervous"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "nervous: often before an event",
+      "angry: connected with a problem",
+      "happy/sad: opposite feelings"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM011",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "read",
+      "write",
+      "listen",
+      "speak"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "read/write: mainly written language",
+      "listen/speak: mainly spoken language",
+      "write: produces text",
+      "listen: receives language"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM012",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "borrow",
+      "lend",
+      "give",
+      "take"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "borrow/lend: temporary transfer",
+      "give: usually permanent",
+      "take: direction is toward the receiver/user"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM013",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "think",
+      "know",
+      "guess",
+      "believe"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "know: implies knowledge",
+      "guess: uncertainty",
+      "believe: personal belief",
+      "think: broad opinion/thought"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM014",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "want",
+      "need",
+      "hope",
+      "plan"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "need: necessity",
+      "hope: desired future result",
+      "plan: organized future action",
+      "want: general desire"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM015",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "invite",
+      "join",
+      "meet",
+      "call"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "call: can happen without being in the same place",
+      "join: enter a group/activity",
+      "invite: ask someone to come",
+      "meet: come together"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM016",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "open",
+      "close",
+      "start",
+      "stop"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "open/close are opposites",
+      "start/stop are opposites",
+      "students can group the pairings in different ways"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM017",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "buy",
+      "pay",
+      "order",
+      "choose"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "pay: money action",
+      "order: request goods/food",
+      "choose: decision before buying",
+      "buy: complete purchase"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM018",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "walk",
+      "run",
+      "ride",
+      "drive"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "walk/run use your own legs",
+      "ride/drive usually use a vehicle",
+      "drive: control the vehicle",
+      "ride: may be passenger"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM019",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "see",
+      "watch",
+      "look",
+      "notice"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "watch: continue looking",
+      "look: direct your eyes",
+      "see: perceive",
+      "notice: become aware"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM020",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "hear",
+      "listen",
+      "speak",
+      "tell"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "hear/listen receive sound",
+      "speak/tell produce language",
+      "tell usually needs information or a person"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM021",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "early",
+      "late",
+      "fast",
+      "slow"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "early/late relate to time",
+      "fast/slow relate to speed",
+      "students may create a context connecting them"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM022",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "near",
+      "far",
+      "high",
+      "low"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "near/far describe distance",
+      "high/low describe vertical position"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM023",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "clean",
+      "dirty",
+      "safe",
+      "dangerous"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "clean/dirty are opposites",
+      "safe/dangerous are opposites"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM024",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "full",
+      "empty",
+      "big",
+      "small"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "full/empty describe amount inside",
+      "big/small describe size"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM025",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "strong",
+      "weak",
+      "heavy",
+      "light"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "strong/weak describe ability/force",
+      "heavy/light describe weight"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM026",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "new",
+      "old",
+      "young",
+      "famous"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "new/old can describe things",
+      "young usually living things",
+      "famous is about being known"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM027",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "popular",
+      "famous",
+      "important",
+      "useful"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "popular: liked by many",
+      "famous: known by many",
+      "important: matters",
+      "useful: helps with a purpose"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM028",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "easy",
+      "difficult",
+      "possible",
+      "impossible"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "easy/difficult describe difficulty",
+      "possible/impossible describe whether it can happen"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM029",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "beautiful",
+      "cool",
+      "cute",
+      "interesting"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "beautiful/cute often appearance",
+      "interesting often ideas/content",
+      "cool can mean appearance or temperature"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM030",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "school",
+      "hospital",
+      "station",
+      "library"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "station: transport",
+      "hospital: health",
+      "school/library: learning; many other reasons possible"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM031",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "river",
+      "sea",
+      "mountain",
+      "park"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "river/sea are water",
+      "mountain is high land",
+      "park is mainly human-designed"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM032",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "computer",
+      "phone",
+      "camera",
+      "television"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "phone: communication",
+      "camera: photos",
+      "television: watching programs",
+      "computer: many purposes"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM033",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "pencil",
+      "pen",
+      "ruler",
+      "notebook"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "ruler: measures",
+      "notebook: paper pages",
+      "pencil can be erased",
+      "pen usually uses ink"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM034",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "shirt",
+      "jacket",
+      "shoes",
+      "hat"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "shoes: worn on feet",
+      "hat: head",
+      "shirt/jacket: upper body"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM035",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "water",
+      "milk",
+      "tea",
+      "juice"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "water: no flavor/additives by default",
+      "milk: dairy",
+      "tea: brewed",
+      "juice: fruit-based"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM036",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "rice",
+      "bread",
+      "noodles",
+      "cake"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "cake: usually dessert",
+      "rice/noodles often staple foods",
+      "bread is baked"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM037",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "breakfast",
+      "lunch",
+      "dinner",
+      "snack"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "snack: not usually a main meal",
+      "breakfast: first meal",
+      "dinner: often last main meal"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM038",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "spring",
+      "summer",
+      "autumn",
+      "winter"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "summer/winter temperature extremes",
+      "spring/autumn transition seasons",
+      "any one can be justified by activities/weather"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM039",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "Monday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "Saturday/Sunday often weekend",
+      "Monday starts school/work week",
+      "Friday is before weekend"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM040",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "January",
+      "April",
+      "July",
+      "October"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "each can be selected by season, school year, holidays, or quarter"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM041",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "red",
+      "blue",
+      "green",
+      "yellow"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "green: common traffic-light color for go",
+      "red: stop/warning",
+      "yellow: caution",
+      "blue: often linked with sky/water"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM042",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "one",
+      "two",
+      "three",
+      "four"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "two/four are even",
+      "one/three are odd",
+      "one is not plural"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM043",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "mother",
+      "father",
+      "brother",
+      "sister"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "mother/father parents",
+      "brother/sister siblings",
+      "gender or generation gives multiple answers"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM044",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "student",
+      "teacher",
+      "doctor",
+      "nurse"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "student learns",
+      "teacher teaches",
+      "doctor/nurse health care",
+      "several valid groupings"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM045",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "football",
+      "baseball",
+      "basketball",
+      "volleyball"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "football often no hands",
+      "baseball uses bat",
+      "basketball hoop",
+      "volleyball net; many valid reasons"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM046",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "piano",
+      "guitar",
+      "trumpet",
+      "drum"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "trumpet wind instrument",
+      "piano/guitar string-related",
+      "drum percussion",
+      "many instrument-family answers"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM047",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "car",
+      "bus",
+      "train",
+      "bicycle"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "bicycle human-powered",
+      "train rail",
+      "bus public road vehicle",
+      "car often private"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM048",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "house",
+      "apartment",
+      "hotel",
+      "school"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "hotel temporary stay",
+      "school learning",
+      "house/apartment homes"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM049",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "sun",
+      "moon",
+      "star",
+      "cloud"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "cloud not a celestial body",
+      "sun is a star",
+      "moon orbits Earth",
+      "star can mean many distant suns"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM050",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "email",
+      "message",
+      "letter",
+      "phone"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "phone is a device; others can be messages",
+      "letter physical",
+      "email digital",
+      "message broad"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  },
+  {
+    "id": "WM051",
+    "type": "MYSTERY",
+    "label": "open_reasoning",
+    "words": [
+      "picture",
+      "photo",
+      "video",
+      "map"
+    ],
+    "suggested_answer": "",
+    "sample_ideas": [
+      "map shows location",
+      "video moves",
+      "photo usually camera-made",
+      "picture broader"
+    ],
+    "teacher_prompt": "Which one? Why?",
+    "answer_policy": "正解は1つに固定しない。理由が英語または意味の通る説明で示せれば成立。"
+  }
+]
+</script>
+<script type="application/json" id="vt-data-app-config">
+{
+  "version": "1.0",
+  "default_modes": [
+    "SCENE",
+    "WHICH_ONE"
+  ],
+  "scene_flow": [
+    "SCENE",
+    "OPTIONAL_HINT",
+    "WORD",
+    "MODEL_SENTENCE"
+  ],
+  "advance_control": "teacher_manual",
+  "auto_timer_default": false,
+  "large_screen_priority": true,
+  "default_scene_count": 10,
+  "which_one_policy": "Reason matters more than a single fixed answer.",
+  "credits": [
+    {
+      "name": "CEFR-J Vocabulary Profile v1.5",
+      "url": "https://github.com/openlanguageprofiles/olp-en-cefrj"
+    },
+    {
+      "name": "NGSL 1.2",
+      "url": "https://www.newgeneralservicelist.com/new-general-service-list"
+    },
+    {
+      "name": "NGSL-Spoken 1.2",
+      "url": "https://www.newgeneralservicelist.com/ngsl-spoken"
+    },
+    {
+      "name": "Klinger (2025) JHS textbook vocabulary study",
+      "url": "https://www.castledown.com/journals/vli/article/view/vli.v14n2.102480"
+    }
+  ]
+}
+</script>
+
+<script>
+// ===== icons.js =====
+
+// icons.js — small inline SVGs for presentation controls.
+// The teacher is the only person operating these, so icons stand alone
+// with no Japanese (or English) label next to them.
+
+const ICONS = {
+  prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  hint: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.4 9.3a2.6 2.6 0 1 1 3.5 2.4c-.9.4-1.4 1-1.4 2.1"/><circle cx="12" cy="16.6" r=".6" fill="currentColor" stroke="none"/></svg>',
+  peek: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  frame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>',
+};
+
+function icon(name) {
+  return ICONS[name] || '';
+}
+
+
+// ===== data.js =====
+
+// data.js — loads the provided JSON as-is. Never mutate the source data.
+
+let sceneTargets = null;
+let whichOneSets = null;
+let appConfig = null;
+
+// Data is embedded directly in this HTML file (see <script type="application/json">
+// blocks near the bottom) so the app survives GitHub's drag-and-drop upload flow,
+// which does not preserve folder structure for individually-dropped files.
+function readEmbeddedJSON(id) {
+  const el = document.getElementById(id);
+  if (!el) throw new Error('missing embedded data block: ' + id);
+  return JSON.parse(el.textContent);
+}
+
+async function loadData() {
+  if (sceneTargets && whichOneSets && appConfig) {
+    return { sceneTargets, whichOneSets, appConfig };
+  }
+  const scenes = readEmbeddedJSON('vt-data-scene-targets');
+  const whichOne = readEmbeddedJSON('vt-data-which-one-sets');
+  const config = readEmbeddedJSON('vt-data-app-config');
+  // Only items the data itself marks as classroom-ready by default.
+  sceneTargets = scenes.filter((s) => s.default_enabled !== false);
+  whichOneSets = whichOne;
+  appConfig = config;
+  return { sceneTargets, whichOneSets, appConfig };
+}
+
+// image path convention: assets/scenes/<word>.webp
+// Falls back to a placeholder if the file has not been created yet.
+function scenePath(item) {
+  return `assets/scenes/${item.word.replace(/\s+/g, '_')}.webp`;
+}
+
+const imageExistsCache = new Map();
+function checkImage(path) {
+  if (imageExistsCache.has(path)) return imageExistsCache.get(path);
+  const p = new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = path;
+  });
+  imageExistsCache.set(path, p);
+  return p;
+}
+
+function uniqueValues(list, field) {
+  const set = new Set();
+  list.forEach((item) => {
+    const v = item[field];
+    if (Array.isArray(v)) v.forEach((x) => set.add(x));
+    else if (v) String(v).split(',').forEach((x) => set.add(x.trim()));
+  });
+  return [...set].sort();
+}
+
+function filterScenes(list, { tier, pos, fn } = {}) {
+  return list.filter((s) => {
+    if (tier && s.tier !== tier) return false;
+    if (pos && !s.pos.split(',').map((x) => x.trim()).includes(pos)) return false;
+    if (fn && s.function !== fn) return false;
+    return true;
+  });
+}
+
+function filterWhichOne(list, { type } = {}) {
+  return list.filter((s) => (type ? s.type === type : true));
+}
+
+function sample(list, n) {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
+
+
+// ===== storage.js =====
+
+// storage.js — teacher's saved sets, localStorage only. No server, no login.
+// Key layout:
+//   vt_sets_scene      -> [{id, name, ids:[scene_target id...], createdAt}]
+//   vt_sets_which_one   -> [{id, name, ids:[which_one_set id...], createdAt}]
+
+const KEY = { scene: 'vt_sets_scene', which_one: 'vt_sets_which_one' };
+
+function readAll(mode) {
+  try {
+    const raw = localStorage.getItem(KEY[mode]);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn('vt storage read failed', e);
+    return [];
+  }
+}
+
+function writeAll(mode, list) {
+  try {
+    localStorage.setItem(KEY[mode], JSON.stringify(list));
+    return true;
+  } catch (e) {
+    console.warn('vt storage write failed', e);
+    return false;
+  }
+}
+
+const Storage = {
+  list(mode) {
+    return readAll(mode).sort((a, b) => b.createdAt - a.createdAt);
+  },
+  save(mode, name, ids) {
+    const list = readAll(mode);
+    const entry = {
+      id: 'set_' + Date.now().toString(36),
+      name: (name || '').trim() || '無題のセット',
+      ids,
+      createdAt: Date.now(),
+    };
+    list.push(entry);
+    writeAll(mode, list);
+    return entry;
+  },
+  remove(mode, id) {
+    const list = readAll(mode).filter((s) => s.id !== id);
+    writeAll(mode, list);
+  },
+  get(mode, id) {
+    return readAll(mode).find((s) => s.id === id) || null;
+  },
+};
+
+
+// ===== selector.js =====
+
+// selector.js — "10題選択" screen. One job: pick items, then start.
+
+const POS_LABELS = {
+  adjective: 'Adjective', verb: 'Verb', noun: 'Noun', adverb: 'Adverb', phrase: 'Phrase',
+};
+
+function renderSelector(root, { mode, items, onStart, showToast }) {
+  const picked = new Set();
+  let filtered = items;
+  let activeFilters = {};
+
+  root.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'selector';
+
+  const head = document.createElement('div');
+  head.className = 'selector-head';
+  head.innerHTML = `
+    <div class="selector-title en">${mode === 'scene' ? 'SCENE / TALK' : 'WHICH ONE?'}</div>
+  `;
+  const headActions = document.createElement('div');
+  headActions.style.display = 'flex';
+  headActions.style.gap = '.5rem';
+
+  const randomBtn = btn('btn btn-outline btn-sm', 'ランダム10');
+  const clearBtn = btn('btn btn-ghost btn-sm', '選択解除');
+  headActions.append(randomBtn, clearBtn);
+  head.appendChild(headActions);
+  wrap.appendChild(head);
+
+  // ---- filters ----
+  const filterRow = document.createElement('div');
+  filterRow.className = 'filter-row';
+  wrap.appendChild(filterRow);
+
+  if (mode === 'scene') {
+    const tiers = uniqueValues(items, 'tier');
+    const posList = uniqueValues(items, 'pos');
+    filterRow.appendChild(segmented('レベル', ['すべて', ...tiers], (val) => {
+      activeFilters.tier = val === 'すべて' ? undefined : val;
+      applyFilters();
+    }));
+    filterRow.appendChild(segmented('品詞', ['すべて', ...posList.filter((p) => POS_LABELS[p] || p.length < 12)], (val) => {
+      activeFilters.pos = val === 'すべて' ? undefined : val;
+      applyFilters();
+    }));
+  } else {
+    filterRow.appendChild(segmented('種類', ['すべて', 'QUICK', 'MYSTERY'], (val) => {
+      activeFilters.type = val === 'すべて' ? undefined : val;
+      applyFilters();
+    }));
+  }
+
+  // ---- saved sets ----
+  const savedRow = document.createElement('div');
+  savedRow.style.marginBottom = '.9rem';
+  wrap.appendChild(savedRow);
+  renderSavedSets();
+
+  // ---- grid ----
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  wrap.appendChild(grid);
+
+  root.appendChild(wrap);
+
+  // ---- bottom bar ----
+  const bar = document.createElement('div');
+  bar.className = 'selector-bar';
+  const countBadge = document.createElement('div');
+  countBadge.className = 'count-badge';
+  const barActions = document.createElement('div');
+  barActions.style.display = 'flex';
+  barActions.style.gap = '.5rem';
+  const saveBtn = btn('btn btn-outline btn-sm', 'このセットを保存');
+  const startBtn = btn('btn btn-primary btn-lg', 'はじめる');
+  barActions.append(saveBtn, startBtn);
+  bar.append(countBadge, barActions);
+  root.appendChild(bar);
+
+  function segmented(label, options, onChange) {
+    const box = document.createElement('div');
+    box.style.display = 'flex';
+    box.style.flexDirection = 'column';
+    box.style.gap = '.25rem';
+    const lab = document.createElement('span');
+    lab.className = 'eyebrow';
+    lab.textContent = label;
+    const seg = document.createElement('div');
+    seg.className = 'segmented';
+    options.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.textContent = POS_LABELS[opt] || opt;
+      if (i === 0) b.classList.add('on');
+      b.onclick = () => {
+        [...seg.children].forEach((c) => c.classList.remove('on'));
+        b.classList.add('on');
+        onChange(opt);
+      };
+      seg.appendChild(b);
+    });
+    box.append(lab, seg);
+    return box;
+  }
+
+  function btn(cls, text) {
+    const b = document.createElement('button');
+    b.className = cls;
+    b.textContent = text;
+    return b;
+  }
+
+  function applyFilters() {
+    filtered = mode === 'scene' ? filterScenes(items, activeFilters) : filterWhichOne(items, activeFilters);
+    renderGrid();
+  }
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    filtered.forEach((item) => {
+      const tile = document.createElement('button');
+      tile.className = 'tile' + (picked.has(item.id) ? ' picked' : '');
+      tile.type = 'button';
+      if (mode === 'scene') {
+        tile.innerHTML = `
+          <div class="tile-word en">${item.word}</div>
+          <div class="tile-ja">${item.japanese}</div>
+          <div class="tile-tags"><span class="tag">${item.tier}</span><span class="tag">${item.function}</span></div>
+          <span class="tile-check"></span>
+        `;
+      } else {
+        tile.innerHTML = `
+          <div class="tile-word en">${item.words.join(' · ')}</div>
+          <div class="tile-ja">${item.type}${item.label ? ' · ' + item.label : ''}</div>
+          <span class="tile-check"></span>
+        `;
+      }
+      tile.onclick = () => {
+        if (picked.has(item.id)) picked.delete(item.id);
+        else picked.add(item.id);
+        tile.classList.toggle('picked');
+        updateCount();
+      };
+      grid.appendChild(tile);
+    });
+  }
+
+  function renderSavedSets() {
+    const sets = Storage.list(mode);
+    savedRow.innerHTML = '';
+    if (!sets.length) return;
+    const lab = document.createElement('span');
+    lab.className = 'eyebrow';
+    lab.textContent = '保存したセット';
+    lab.style.display = 'block';
+    lab.style.marginBottom = '.4rem';
+    savedRow.appendChild(lab);
+    const chips = document.createElement('div');
+    chips.style.display = 'flex';
+    chips.style.gap = '.5rem';
+    chips.style.flexWrap = 'wrap';
+    sets.forEach((s) => {
+      const chip = document.createElement('button');
+      chip.className = 'btn btn-outline btn-sm';
+      chip.textContent = `${s.name} (${s.ids.length})`;
+      chip.onclick = () => {
+        picked.clear();
+        s.ids.forEach((id) => picked.add(id));
+        renderGrid();
+        updateCount();
+      };
+      const del = document.createElement('button');
+      del.className = 'btn btn-ghost btn-sm';
+      del.textContent = '×';
+      del.title = '削除';
+      del.onclick = (e) => {
+        e.stopPropagation();
+        Storage.remove(mode, s.id);
+        renderSavedSets();
+      };
+      const group = document.createElement('span');
+      group.style.display = 'inline-flex';
+      group.append(chip, del);
+      chips.appendChild(group);
+    });
+    savedRow.appendChild(chips);
+  }
+
+  function updateCount() {
+    countBadge.innerHTML = `<b>${picked.size}</b> 問選択中`;
+    startBtn.disabled = picked.size === 0;
+    saveBtn.disabled = picked.size === 0;
+  }
+
+  randomBtn.onclick = () => {
+    picked.clear();
+    sample(filtered, Math.min(10, filtered.length)).forEach((it) => picked.add(it.id));
+    renderGrid();
+    updateCount();
+  };
+  clearBtn.onclick = () => {
+    picked.clear();
+    renderGrid();
+    updateCount();
+  };
+  saveBtn.onclick = () => {
+    const name = prompt('セット名を入力してください');
+    if (name === null) return;
+    Storage.save(mode, name, [...picked]);
+    renderSavedSets();
+    showToast('セットを保存しました');
+  };
+  startBtn.onclick = () => {
+    const list = items.filter((it) => picked.has(it.id));
+    if (list.length) onStart(list);
+  };
+
+  applyFilters();
+  updateCount();
+}
+
+
+// ===== scene.js =====
+
+// scene.js — the main event. Teacher presses Reveal / Next. Nothing auto-advances.
+// Controls are icon-only: the teacher is the only person operating this screen.
+
+const STAGES = ['scene', 'word', 'model'];
+
+function renderScene(root, { items, onExit, showToast }) {
+  let index = 0;
+  let stageIdx = 0; // position within STAGES
+  let hintOpen = false;
+  let helperOpen = false;
+
+  root.innerHTML = '';
+  const stage = document.createElement('div');
+  stage.className = 'stage';
+
+  const progress = document.createElement('div');
+  progress.className = 'stage-progress mono';
+  const exitBtn = document.createElement('button');
+  exitBtn.className = 'icon-btn ghost icon-btn-sm stage-exit';
+  exitBtn.innerHTML = icon('close');
+  exitBtn.setAttribute('aria-label', '終了');
+  exitBtn.onclick = () => { if (window.confirm('終了しますか？')) onExit(); };
+
+  const content = document.createElement('div');
+  content.style.display = 'flex';
+  content.style.flexDirection = 'column';
+  content.style.alignItems = 'center';
+  content.style.gap = '1rem';
+
+  stage.append(progress, exitBtn, content);
+  root.appendChild(stage);
+
+  const controls = document.createElement('div');
+  controls.className = 'stage-controls';
+  root.appendChild(controls);
+
+  const helper = document.createElement('div');
+  helper.className = 'helper-pop';
+
+  function currentItem() {
+    return items[index];
+  }
+
+  async function renderContent() {
+    const item = currentItem();
+    content.innerHTML = '';
+    progress.textContent = `${index + 1} / ${items.length}`;
+    hintOpen = false;
+
+    if (stageIdx === 0) {
+      // SCENE — image maximized, nothing else
+      const frame = document.createElement('div');
+      frame.className = 'scene-frame';
+      const path = scenePath(item);
+      const exists = await checkImage(path);
+      if (exists) {
+        frame.innerHTML = `<img src="${path}" alt="">`;
+      } else {
+        frame.innerHTML = `<div class="scene-placeholder">${icon('frame')}<span>SCENE ${item.image_status === 'TO_CREATE' ? '準備中' : ''}</span></div>`;
+      }
+      content.appendChild(frame);
+
+      const hintBox = document.createElement('div');
+      hintBox.className = 'reveal-chunk';
+      hintBox.style.minHeight = '1.4em';
+      content.appendChild(hintBox);
+    } else if (stageIdx === 1) {
+      // WORD
+      const w = document.createElement('div');
+      w.className = 'reveal-word en';
+      w.innerHTML = `${item.word}<span class="ja">${item.japanese}</span>`;
+      content.appendChild(w);
+    } else {
+      // MODEL
+      const chunk = document.createElement('div');
+      chunk.className = 'reveal-chunk en';
+      chunk.textContent = item.chunk;
+      const m = document.createElement('div');
+      m.className = 'reveal-model en';
+      m.textContent = item.model_sentence;
+      content.append(chunk, m);
+    }
+    renderControls();
+  }
+
+  function slot(el) {
+    const s = document.createElement('div');
+    s.className = 'ctrl-slot';
+    s.appendChild(el);
+    return s;
+  }
+
+  function renderControls() {
+    controls.innerHTML = '';
+
+    controls.appendChild(slot(iconBtn('outline', 'prev', () => go(-1), index === 0 && stageIdx === 0, '前へ')));
+
+    const hintBtn = iconBtn('outline' + (hintOpen ? ' on' : ''), 'hint', () => toggleHint(), false, 'ヒント');
+    if (stageIdx !== 0) {
+      hintBtn.style.visibility = 'hidden';
+      hintBtn.tabIndex = -1;
+    }
+    controls.appendChild(slot(hintBtn));
+
+    let nextBtn;
+    if (stageIdx < STAGES.length - 1) {
+      nextBtn = iconBtn('primary', 'next', () => { stageIdx += 1; renderContent(); }, false, '次へ');
+    } else {
+      const isLast = index === items.length - 1;
+      nextBtn = iconBtn('primary', isLast ? 'close' : 'next', () => {
+        if (isLast) { if (window.confirm('終了しますか？')) onExit(); return; }
+        go(1);
+      }, false, isLast ? '終了' : '次のシーンへ');
+    }
+    controls.appendChild(slot(nextBtn));
+
+    const anchor = document.createElement('div');
+    anchor.className = 'helper-anchor';
+    anchor.appendChild(iconBtn('ghost' + (helperOpen ? ' on' : ''), 'peek', () => toggleHelper(), false, '先生メモ'));
+    anchor.appendChild(helper);
+    controls.appendChild(slot(anchor));
+
+    renderHelper();
+  }
+
+  function toggleHint() {
+    hintOpen = !hintOpen;
+    const box = content.querySelector('.reveal-chunk');
+    if (box) box.textContent = hintOpen ? currentItem().teacher_prompt : '';
+    renderControls();
+  }
+
+  function toggleHelper() {
+    helperOpen = !helperOpen;
+    helper.classList.toggle('open', helperOpen);
+  }
+
+  function renderHelper() {
+    const item = currentItem();
+    helper.innerHTML = `
+      <button class="hp-close" type="button" aria-label="close">×</button>
+      <ul>
+        <li>${item.teacher_prompt}</li>
+        <li>${item.scene_idea}</li>
+      </ul>
+    `;
+    helper.querySelector('.hp-close').onclick = () => toggleHelper();
+  }
+
+  function iconBtn(cls, iconName, onClick, disabled = false, label = '') {
+    const b = document.createElement('button');
+    b.className = 'icon-btn ' + cls;
+    b.innerHTML = icon(iconName);
+    b.disabled = disabled;
+    if (label) b.setAttribute('aria-label', label);
+    b.onclick = onClick;
+    return b;
+  }
+
+  function go(dir) {
+    helperOpen = false;
+    helper.classList.remove('open');
+    if (dir > 0) {
+      index += 1;
+      stageIdx = 0;
+    } else {
+      if (stageIdx > 0) {
+        stageIdx -= 1;
+      } else if (index > 0) {
+        index -= 1;
+        stageIdx = STAGES.length - 1;
+      }
+    }
+    renderContent();
+  }
+
+  renderContent();
+}
+
+
+// ===== which-one.js =====
+
+// which-one.js — WORDS -> answer check. 2x2 grid, order shuffled per item so
+// the "different one" isn't always in the same spot.
+
+function renderWhichOne(root, { items, onExit }) {
+  const STAGES = ['words', 'ideas'];
+  let index = 0;
+  let stageIdx = 0;
+  let helperOpen = false;
+  const shuffledCache = new Map();
+
+  root.innerHTML = '';
+  const stage = document.createElement('div');
+  stage.className = 'stage';
+
+  const progress = document.createElement('div');
+  progress.className = 'stage-progress mono';
+  const exitBtn = document.createElement('button');
+  exitBtn.className = 'icon-btn ghost icon-btn-sm stage-exit';
+  exitBtn.innerHTML = icon('close');
+  exitBtn.setAttribute('aria-label', '終了');
+  exitBtn.onclick = () => { if (window.confirm('終了しますか？')) onExit(); };
+
+  const content = document.createElement('div');
+  content.style.display = 'flex';
+  content.style.flexDirection = 'column';
+  content.style.alignItems = 'center';
+  content.style.gap = '1.6rem';
+
+  stage.append(progress, exitBtn, content);
+  root.appendChild(stage);
+
+  const controls = document.createElement('div');
+  controls.className = 'stage-controls';
+  root.appendChild(controls);
+
+  const helper = document.createElement('div');
+  helper.className = 'helper-pop';
+
+  const COLORS = ['var(--teal-soft)', 'var(--blue-soft)', 'var(--amber-soft)', 'var(--paper-2)'];
+
+  function currentItem() {
+    return items[index];
+  }
+
+  function displayWords(item) {
+    if (!shuffledCache.has(item.id)) {
+      const arr = [...item.words];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      shuffledCache.set(item.id, arr);
+    }
+    return shuffledCache.get(item.id);
+  }
+
+  async function renderContent() {
+    const item = currentItem();
+    progress.textContent = `${index + 1} / ${items.length}`;
+    content.innerHTML = '';
+    helperOpen = false;
+    helper.classList.remove('open');
+
+    if (stageIdx === 0) {
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'eyebrow';
+      eyebrow.textContent = 'Which one? Why?';
+
+      const row = document.createElement('div');
+      row.className = 'which-row';
+      displayWords(item).forEach((w, i) => {
+        const el = document.createElement('div');
+        el.className = 'which-word en';
+        el.style.background = COLORS[i % COLORS.length];
+        el.textContent = w;
+        row.appendChild(el);
+      });
+      content.append(eyebrow, row);
+    } else {
+      // answer check — shown big, on purpose, after the class has already talked it through.
+      // Visual first, text last: an image for the answer word (when there is one), then the word, then the ideas.
+      const wrap = document.createElement('div');
+      wrap.className = 'ideas-wrap';
+      if (item.suggested_answer) {
+        const frame = document.createElement('div');
+        frame.className = 'which-image-frame';
+        const path = scenePath({ word: item.suggested_answer });
+        const exists = await checkImage(path);
+        frame.innerHTML = exists
+          ? `<img src="${path}" alt="">`
+          : `<div class="scene-placeholder">${icon('frame')}<span>準備中</span></div>`;
+        wrap.appendChild(frame);
+
+        const ans = document.createElement('div');
+        ans.className = 'idea-answer en';
+        ans.textContent = item.suggested_answer;
+        wrap.appendChild(ans);
+      }
+      const list = document.createElement('div');
+      list.className = 'idea-list';
+      (item.sample_ideas || []).forEach((idea) => {
+        const line = document.createElement('div');
+        line.className = 'idea-line en';
+        line.textContent = idea;
+        list.appendChild(line);
+      });
+      wrap.appendChild(list);
+      content.appendChild(wrap);
+    }
+    renderControls();
+  }
+
+  function slot(el) {
+    const s = document.createElement('div');
+    s.className = 'ctrl-slot';
+    s.appendChild(el);
+    return s;
+  }
+
+  function renderControls() {
+    controls.innerHTML = '';
+    controls.appendChild(slot(iconBtn('outline', 'prev', () => go(-1), index === 0 && stageIdx === 0, '前へ')));
+
+    let nextBtn;
+    if (stageIdx === 0) {
+      nextBtn = iconBtn('primary', 'next', () => { stageIdx = 1; renderContent(); }, false, '答え合わせ');
+    } else {
+      const isLast = index === items.length - 1;
+      nextBtn = iconBtn('primary', isLast ? 'close' : 'next', () => {
+        if (isLast) { if (window.confirm('終了しますか？')) onExit(); return; }
+        go(1);
+      }, false, isLast ? '終了' : '次のセットへ');
+    }
+    controls.appendChild(slot(nextBtn));
+
+    const anchor = document.createElement('div');
+    anchor.className = 'helper-anchor';
+    const peekBtn = iconBtn('ghost' + (helperOpen ? ' on' : ''), 'peek', () => toggleHelper(), false, '先生メモ');
+    if (stageIdx !== 0) {
+      peekBtn.style.visibility = 'hidden';
+      peekBtn.tabIndex = -1;
+    }
+    anchor.appendChild(peekBtn);
+    anchor.appendChild(helper);
+    controls.appendChild(slot(anchor));
+
+    if (stageIdx === 0) renderHelper();
+  }
+
+  function toggleHelper() {
+    helperOpen = !helperOpen;
+    helper.classList.toggle('open', helperOpen);
+  }
+
+  function renderHelper() {
+    const item = currentItem();
+    const lines = [item.suggested_answer, ...(item.sample_ideas || [])].filter(Boolean);
+    helper.innerHTML = `
+      <button class="hp-close" type="button" aria-label="close">×</button>
+      <ul>${lines.map((l) => `<li>${l}</li>`).join('')}</ul>
+    `;
+    helper.querySelector('.hp-close').onclick = () => toggleHelper();
+  }
+
+  function iconBtn(cls, iconName, onClick, disabled = false, label = '') {
+    const b = document.createElement('button');
+    b.className = 'icon-btn ' + cls;
+    b.innerHTML = icon(iconName);
+    b.disabled = disabled;
+    if (label) b.setAttribute('aria-label', label);
+    b.onclick = onClick;
+    return b;
+  }
+
+  function go(dir) {
+    if (dir > 0) {
+      index += 1;
+      stageIdx = 0;
+    } else if (stageIdx > 0) {
+      stageIdx -= 1;
+    } else if (index > 0) {
+      index -= 1;
+      stageIdx = STAGES.length - 1;
+    }
+    renderContent();
+  }
+
+  renderContent();
+}
+
+
+// ===== app.js =====
+
+
+const root = document.getElementById('app-root');
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+}
+
+function goHome() {
+  document.body.classList.remove('fs');
+  exitFullscreenIfActive();
+  renderHome();
+}
+
+function exitFullscreenIfActive() {
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+}
+
+async function enterFullscreen() {
+  try {
+    await document.documentElement.requestFullscreen();
+  } catch (e) {
+    // fullscreen not available (e.g. iOS Safari) — presentation styling still applies
+  }
+  document.body.classList.add('fs');
+}
+
+function renderHome() {
+  root.innerHTML = `
+    <div class="home">
+      <div class="home-title en">What do you want to do today?</div>
+      <div class="home-modes">
+        <button class="mode-card" data-mode="scene">
+          <div class="m-title en">SCENE / TALK</div>
+        </button>
+        <button class="mode-card" data-mode="which_one">
+          <div class="m-title en">WHICH ONE?</div>
+        </button>
+      </div>
+      <div class="home-foot">
+        <span class="editor-link">v1.0 · MEXT curriculum aligned vocabulary</span>
+      </div>
+    </div>
+  `;
+  root.querySelectorAll('.mode-card').forEach((el) => {
+    el.addEventListener('click', () => openSelector(el.dataset.mode));
+  });
+}
+
+async function openSelector(mode) {
+  const { sceneTargets, whichOneSets } = await loadData();
+  const items = mode === 'scene' ? sceneTargets : whichOneSets;
+  renderSelector(root, {
+    mode,
+    items,
+    showToast,
+    onStart: (chosen) => openPresentation(mode, chosen),
+  });
+}
+
+async function openPresentation(mode, chosen) {
+  await enterFullscreen();
+  const onExit = () => goHome();
+  if (mode === 'scene') {
+    renderScene(root, { items: chosen, onExit, showToast });
+  } else {
+    renderWhichOne(root, { items: chosen, onExit, showToast });
+  }
+}
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) document.body.classList.remove('fs');
+});
+
+document.querySelector('.brand').addEventListener('click', () => goHome());
+
+renderHome();
+
+</script>
+</body>
+</html>
