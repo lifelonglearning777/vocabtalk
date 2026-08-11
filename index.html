@@ -200,28 +200,38 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
   max-width:88vw;text-wrap:balance;
 }
 .reveal-chunk{
-  font-family:"Space Mono",monospace;font-size:clamp(.95rem,1.8vw,1.3rem);
-  letter-spacing:.04em;color:var(--teal-ink);text-transform:none;margin-bottom:.8rem;
+  font-family:"Space Mono",monospace;font-size:clamp(1.15rem,2.4vw,1.7rem);
+  letter-spacing:.03em;color:var(--teal-ink);text-transform:none;margin-bottom:.8rem;
 }
 
 .which-row{
-  display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));grid-template-rows:repeat(2,auto);
-  gap:1.3rem 1.6rem;justify-items:stretch;align-items:center;max-width:min(70vw,760px);
+  display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));
+  gap:.65rem;width:min(96vw,1500px);
 }
+.which-cell{
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;min-width:0;
+  border-radius:20px;padding:.55rem .55rem .65rem;
+}
+.which-cell-frame{
+  width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+  background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;
+}
+.which-cell-frame img{width:100%;height:100%;object-fit:contain;background:#fff}
+.which-cell-frame.photo-reveal{animation:photoReveal .35s ease both}
+.which-cell-frame .scene-placeholder svg{width:34px;height:34px;color:var(--ink-dim)}
 .which-word{
   font-family:"Andika",sans-serif;font-weight:700;color:var(--ink);
-  font-size:clamp(2.4rem,5.6vw,4.6rem);text-align:center;
-  padding:.6rem 1.2rem;border-radius:20px;
+  font-size:clamp(1.3rem,2.4vw,2.1rem);line-height:1.15;text-align:center;
 }
 
 .ideas-wrap{display:flex;flex-direction:column;align-items:center;gap:1.2rem;max-width:80vw}
 .which-image-frame{
-  width:min(30vw,280px);aspect-ratio:4/3;border-radius:var(--r-lg);
+  width:min(58vw,680px);aspect-ratio:16/9;border-radius:var(--r-lg);
   background:var(--paper-2);border:1.5px solid var(--rule);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   box-shadow:var(--shadow-sm);
 }
-.which-image-frame img{width:100%;height:100%;object-fit:cover}
+.which-image-frame img{width:100%;height:100%;object-fit:contain;background:#fff}
 .which-image-frame .scene-placeholder svg{width:38px;height:38px}
 .idea-answer{
   font-family:"Andika",sans-serif;font-weight:700;color:var(--teal-ink);
@@ -247,6 +257,27 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
    so it can never sit over the exit button or shift its hit target. */
 .stage-controls{position:relative}
 .helper-anchor{position:relative;display:inline-flex}
+.control-note{
+  position:absolute;left:calc(100% + .55rem);top:50%;transform:translateY(-50%);
+  width:max-content;max-width:min(48vw,620px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:#fff;border:1.5px solid var(--teal);border-radius:999px;
+  padding:.5rem .85rem;box-shadow:var(--shadow-sm);font-size:.88rem;color:var(--ink-soft);
+  z-index:60;
+}
+.stage-content{
+  min-height:min(64vh,650px);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1rem;
+}
+.recap-prompt{
+  font-family:"Andika",sans-serif;font-weight:700;color:var(--teal-ink);
+  font-size:clamp(1.15rem,2vw,1.55rem);letter-spacing:.02em;
+}
+@keyframes sceneEnter{
+  0%{opacity:.2;transform:scale(.975);box-shadow:0 0 0 5px rgba(20,184,166,.28)}
+  100%{opacity:1;transform:scale(1);box-shadow:var(--shadow-md)}
+}
+@keyframes photoReveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.scene-frame.scene-enter{animation:sceneEnter .42s ease both}
 .helper-pop{
   position:absolute;bottom:calc(100% + .6rem);right:0;
   background:#fff;border:1.5px solid var(--teal);border-radius:12px;
@@ -261,8 +292,8 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
   display:flex;align-items:center;justify-content:center;
 }
 .helper-pop .hp-close:hover{background:var(--paper-2);color:var(--ink)}
-.helper-pop ul{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin-top:.1rem}
-.helper-pop li{font-family:"Andika",sans-serif;font-size:.92rem;color:var(--ink-soft)}
+.helper-pop ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-top:.1rem}
+.helper-pop li{font-family:"Andika",sans-serif;font-size:.98rem;color:var(--ink-soft);line-height:1.7}
 
 /* fullscreen mode: hide topbar entirely */
 body.fs .topbar{display:none}
@@ -322,6 +353,12 @@ body.fs .topbar{display:none}
   .home-modes{grid-template-columns:1fr}
   .stage-controls{gap:.35rem}
   .stage-controls .btn{font-size:.8rem;padding:.5rem .8rem}
+  .which-row{grid-template-columns:1fr;width:min(94vw,560px)}
+  .control-note{position:fixed;left:50%;top:auto;bottom:5.2rem;transform:translateX(-50%);max-width:92vw}
+}
+
+@media (min-width:721px) and (max-width:1100px){
+  .which-row{grid-template-columns:repeat(2,minmax(260px,1fr));width:min(94vw,920px)}
 }
 
 </style>
@@ -5300,6 +5337,7 @@ const ICONS = {
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   hint: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.4 9.3a2.6 2.6 0 1 1 3.5 2.4c-.9.4-1.4 1-1.4 2.1"/><circle cx="12" cy="16.6" r=".6" fill="currentColor" stroke="none"/></svg>',
   peek: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  context: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
   frame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>',
 };
 
@@ -5339,10 +5377,24 @@ async function loadData() {
   return { sceneTargets, whichOneSets, appConfig };
 }
 
-// image path convention: assets/scenes/<word>.webp
-// Falls back to a placeholder if the file has not been created yet.
-function scenePath(item) {
-  return `assets/scenes/${item.word.replace(/\s+/g, '_')}.webp`;
+// image path convention: assets/scenes/<word>.<ext>
+// Tries a few extensions so both hand-made SVGs and photo/illustration
+// files (from Codex, etc.) resolve through the same lookup.
+// Falls back to a placeholder if no file exists yet.
+const EXT_CANDIDATES = ['svg', 'webp', 'png', 'jpg', 'jpeg'];
+
+const resolvedPathCache = new Map();
+async function resolveScenePath(item) {
+  const base = `assets/scenes/${item.word.replace(/\s+/g, '_')}`;
+  if (resolvedPathCache.has(base)) return resolvedPathCache.get(base);
+  let found = null;
+  for (const ext of EXT_CANDIDATES) {
+    const path = `${base}.${ext}`;
+    // eslint-disable-next-line no-await-in-loop
+    if (await checkImage(path)) { found = path; break; }
+  }
+  resolvedPathCache.set(base, found);
+  return found;
 }
 
 const imageExistsCache = new Map();
@@ -5677,7 +5729,7 @@ function renderSelector(root, { mode, items, onStart, showToast }) {
 // scene.js — the main event. Teacher presses Reveal / Next. Nothing auto-advances.
 // Controls are icon-only: the teacher is the only person operating this screen.
 
-const STAGES = ['scene', 'word', 'model'];
+const STAGES = ['scene', 'word', 'model', 'recap'];
 
 function renderScene(root, { items, onExit, showToast }) {
   let index = 0;
@@ -5698,10 +5750,7 @@ function renderScene(root, { items, onExit, showToast }) {
   exitBtn.onclick = () => { if (window.confirm('終了しますか？')) onExit(); };
 
   const content = document.createElement('div');
-  content.style.display = 'flex';
-  content.style.flexDirection = 'column';
-  content.style.alignItems = 'center';
-  content.style.gap = '1rem';
+  content.className = 'stage-content';
 
   stage.append(progress, exitBtn, content);
   root.appendChild(stage);
@@ -5717,6 +5766,19 @@ function renderScene(root, { items, onExit, showToast }) {
     return items[index];
   }
 
+  async function buildFrame(item, isNewScene = false) {
+    const frame = document.createElement('div');
+    frame.className = 'scene-frame';
+    if (isNewScene) frame.classList.add('scene-enter');
+    const path = await resolveScenePath(item);
+    if (path) {
+      frame.innerHTML = `<img src="${path}" alt="">`;
+    } else {
+      frame.innerHTML = `<div class="scene-placeholder">${icon('frame')}<span>SCENE ${item.image_status === 'TO_CREATE' ? '準備中' : ''}</span></div>`;
+    }
+    return frame;
+  }
+
   async function renderContent() {
     const item = currentItem();
     content.innerHTML = '';
@@ -5724,17 +5786,8 @@ function renderScene(root, { items, onExit, showToast }) {
     hintOpen = false;
 
     if (stageIdx === 0) {
-      // SCENE — image maximized, nothing else
-      const frame = document.createElement('div');
-      frame.className = 'scene-frame';
-      const path = scenePath(item);
-      const exists = await checkImage(path);
-      if (exists) {
-        frame.innerHTML = `<img src="${path}" alt="">`;
-      } else {
-        frame.innerHTML = `<div class="scene-placeholder">${icon('frame')}<span>SCENE ${item.image_status === 'TO_CREATE' ? '準備中' : ''}</span></div>`;
-      }
-      content.appendChild(frame);
+      // SCENE — image maximized, nothing else, teacher can toggle a hint caption
+      content.appendChild(await buildFrame(item, true));
 
       const hintBox = document.createElement('div');
       hintBox.className = 'reveal-chunk';
@@ -5746,7 +5799,7 @@ function renderScene(root, { items, onExit, showToast }) {
       w.className = 'reveal-word en';
       w.innerHTML = `${item.word}<span class="ja">${item.japanese}</span>`;
       content.appendChild(w);
-    } else {
+    } else if (stageIdx === 2) {
       // MODEL
       const chunk = document.createElement('div');
       chunk.className = 'reveal-chunk en';
@@ -5755,6 +5808,13 @@ function renderScene(root, { items, onExit, showToast }) {
       m.className = 'reveal-model en';
       m.textContent = item.model_sentence;
       content.append(chunk, m);
+    } else {
+      // RECAP — the scene again, no labels at all. The class already knows the
+      // word and sentence; this is their chance to produce it once more, unaided.
+      const prompt = document.createElement('div');
+      prompt.className = 'recap-prompt en';
+      prompt.textContent = 'What would you say in this situation?';
+      content.append(prompt, await buildFrame(item));
     }
     renderControls();
   }
@@ -5792,7 +5852,7 @@ function renderScene(root, { items, onExit, showToast }) {
 
     const anchor = document.createElement('div');
     anchor.className = 'helper-anchor';
-    anchor.appendChild(iconBtn('ghost' + (helperOpen ? ' on' : ''), 'peek', () => toggleHelper(), false, '先生メモ'));
+    anchor.appendChild(iconBtn('ghost' + (helperOpen ? ' on' : ''), 'context', () => toggleHelper(), false, '場面設定'));
     anchor.appendChild(helper);
     controls.appendChild(slot(anchor));
 
@@ -5808,19 +5868,14 @@ function renderScene(root, { items, onExit, showToast }) {
 
   function toggleHelper() {
     helperOpen = !helperOpen;
-    helper.classList.toggle('open', helperOpen);
+    renderControls();
   }
 
   function renderHelper() {
     const item = currentItem();
-    helper.innerHTML = `
-      <button class="hp-close" type="button" aria-label="close">×</button>
-      <ul>
-        <li>${item.teacher_prompt}</li>
-        <li>${item.scene_idea}</li>
-      </ul>
-    `;
-    helper.querySelector('.hp-close').onclick = () => toggleHelper();
+    helper.className = 'control-note';
+    helper.textContent = item.scene_idea;
+    helper.hidden = !helperOpen;
   }
 
   function iconBtn(cls, iconName, onClick, disabled = false, label = '') {
@@ -5860,7 +5915,7 @@ function renderScene(root, { items, onExit, showToast }) {
 // the "different one" isn't always in the same spot.
 
 function renderWhichOne(root, { items, onExit }) {
-  const STAGES = ['words', 'ideas'];
+  const STAGES = ['words', 'pictures', 'ideas'];
   let index = 0;
   let stageIdx = 0;
   let helperOpen = false;
@@ -5879,10 +5934,7 @@ function renderWhichOne(root, { items, onExit }) {
   exitBtn.onclick = () => { if (window.confirm('終了しますか？')) onExit(); };
 
   const content = document.createElement('div');
-  content.style.display = 'flex';
-  content.style.flexDirection = 'column';
-  content.style.alignItems = 'center';
-  content.style.gap = '1.6rem';
+  content.className = 'stage-content';
 
   stage.append(progress, exitBtn, content);
   root.appendChild(stage);
@@ -5919,21 +5971,42 @@ function renderWhichOne(root, { items, onExit }) {
     helperOpen = false;
     helper.classList.remove('open');
 
-    if (stageIdx === 0) {
+    if (stageIdx <= 1) {
       const eyebrow = document.createElement('div');
       eyebrow.className = 'eyebrow';
       eyebrow.textContent = 'Which one? Why?';
 
       const row = document.createElement('div');
       row.className = 'which-row';
-      displayWords(item).forEach((w, i) => {
-        const el = document.createElement('div');
-        el.className = 'which-word en';
-        el.style.background = COLORS[i % COLORS.length];
-        el.textContent = w;
-        row.appendChild(el);
-      });
       content.append(eyebrow, row);
+
+      const words = displayWords(item);
+      const cells = words.map((w, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'which-cell';
+        cell.style.background = COLORS[i % COLORS.length];
+        const frame = document.createElement('div');
+        frame.className = 'which-cell-frame';
+        frame.innerHTML = `<div class="scene-placeholder">${icon('frame')}</div>`;
+        const label = document.createElement('div');
+        label.className = 'which-word en';
+        label.textContent = w;
+        cell.append(frame, label);
+        row.appendChild(cell);
+        return { word: w, frame };
+      });
+
+      // Stage 0 deliberately keeps the four images hidden. The teacher reveals
+      // them together, then advances once more for answer checking.
+      if (stageIdx === 1) {
+        cells.forEach(async ({ word, frame }) => {
+          const path = await resolveScenePath({ word });
+          if (path) {
+            frame.classList.add('photo-reveal');
+            frame.innerHTML = `<img src="${path}" alt="">`;
+          }
+        });
+      }
     } else {
       // answer check — shown big, on purpose, after the class has already talked it through.
       // Visual first, text last: an image for the answer word (when there is one), then the word, then the ideas.
@@ -5942,9 +6015,8 @@ function renderWhichOne(root, { items, onExit }) {
       if (item.suggested_answer) {
         const frame = document.createElement('div');
         frame.className = 'which-image-frame';
-        const path = scenePath({ word: item.suggested_answer });
-        const exists = await checkImage(path);
-        frame.innerHTML = exists
+        const path = await resolveScenePath({ word: item.suggested_answer });
+        frame.innerHTML = path
           ? `<img src="${path}" alt="">`
           : `<div class="scene-placeholder">${icon('frame')}<span>準備中</span></div>`;
         wrap.appendChild(frame);
@@ -5981,7 +6053,9 @@ function renderWhichOne(root, { items, onExit }) {
 
     let nextBtn;
     if (stageIdx === 0) {
-      nextBtn = iconBtn('primary', 'next', () => { stageIdx = 1; renderContent(); }, false, '答え合わせ');
+      nextBtn = iconBtn('primary', 'peek', () => { stageIdx = 1; renderContent(); }, false, '写真を表示');
+    } else if (stageIdx === 1) {
+      nextBtn = iconBtn('primary', 'next', () => { stageIdx = 2; renderContent(); }, false, '答え合わせ');
     } else {
       const isLast = index === items.length - 1;
       nextBtn = iconBtn('primary', isLast ? 'close' : 'next', () => {
@@ -5993,8 +6067,8 @@ function renderWhichOne(root, { items, onExit }) {
 
     const anchor = document.createElement('div');
     anchor.className = 'helper-anchor';
-    const peekBtn = iconBtn('ghost' + (helperOpen ? ' on' : ''), 'peek', () => toggleHelper(), false, '先生メモ');
-    if (stageIdx !== 0) {
+    const peekBtn = iconBtn('ghost' + (helperOpen ? ' on' : ''), 'context', () => toggleHelper(), false, '分類・想定解');
+    if (stageIdx > 1) {
       peekBtn.style.visibility = 'hidden';
       peekBtn.tabIndex = -1;
     }
@@ -6002,7 +6076,7 @@ function renderWhichOne(root, { items, onExit }) {
     anchor.appendChild(helper);
     controls.appendChild(slot(anchor));
 
-    if (stageIdx === 0) renderHelper();
+    if (stageIdx <= 1) renderHelper();
   }
 
   function toggleHelper() {
